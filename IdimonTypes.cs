@@ -10,6 +10,7 @@ namespace Idimon
     {
         Gei,
         Nerd,
-        Gymer
+        Gymer,
+        MilfHunter
     }
 }

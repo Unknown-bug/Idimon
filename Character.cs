@@ -64,7 +64,6 @@ namespace Idimon
         public virtual void Draw()
         {
             Bitmap currentImage = _images[_currentDirection][_currentFrame];
-            Console.WriteLine(_currentDirection);
             SplashKit.DrawBitmap(currentImage, _position.X, _position.Y);
         }
 
