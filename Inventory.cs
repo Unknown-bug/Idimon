@@ -1,30 +1,80 @@
 ﻿using System;
+using System.Collections.Generic;
 using SplashKitSDK;
 
 namespace Idimon
 {
     public class Inventory
     {
-        private List<Item> _items;
+        private Dictionary<string, Items> _items;
 
         public Inventory()
         {
-            _items = new List<Item>();
+            _items = new Dictionary<string, Items>();
         }
 
-        public void AddItem(Item i)
+        // Add item to the inventory
+        public void AddItem(Items item)
         {
-            _items.Add(i);
+            if (_items.ContainsKey(item.Name))
+            {
+                _items[item.Name].Quantity += item.Quantity;
+            }
+            else
+            {
+                _items[item.Name] = item;
+            }
         }
 
-        public void RemoveItem(Item i)
+        // Remove one quantity of the item from the inventory
+        public void RemoveItem(string itemName)
         {
-            _items.Remove(i);
+            if (_items.ContainsKey(itemName))
+            {
+                _items[itemName].Quantity -= 1;
+
+                if (_items[itemName].Quantity <= 0)
+                {
+                    _items.Remove(itemName);
+                }
+            }
         }
 
-        public void Open()
+        // Find item by name
+        public Items FindItemByName(string name)
         {
-            
+            if (_items.ContainsKey(name))
+            {
+                return _items[name];
+            }
+            return null;
+        }
+
+        // Get the list of all items
+        public List<Items> GetAllItems()
+        {
+            return new List<Items>(_items.Values);
+        }
+
+        // Display the inventory
+        public void DisplayInventory(Window window, double startX, double startY)
+        {
+            double x = startX;
+            double y = startY;
+            const double ITEM_SPACING = 50;
+
+            foreach (Items item in _items.Values)
+            {
+                SplashKit.FillRectangle(Color.RGBAColor(255, 255, 255, 125), x, y, 30, 30);
+                item.Draw(window, x, y);
+                y += ITEM_SPACING; // Adjust spacing as needed
+            }
+        }
+
+        // Get the total number of items
+        public int GetTotalItems()
+        {
+            return _items.Count;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Idimon
         private const double MoveDuration = 0.2;
         private Map _map; // Reference to the Map instance
         string path = "img\\PlayerIMG\\";
+        private Inventory _inventory;
 
         public Player(string name, List<string> imagePaths, Point2D position, Window window, Map map) : base(name, imagePaths, position, window)
         {
@@ -22,6 +23,7 @@ namespace Idimon
             _moveQueue = new Queue<Point2D>();
             _moveTimer = 0;
             _map = map; // Initialize the Map reference
+            _inventory = new Inventory();
         }
 
         public override void LoadImages()
@@ -54,6 +56,8 @@ namespace Idimon
                 UpdateAnimation(deltaTime);
             }
         }
+
+        public Inventory Inventory => _inventory;
 
         private void UpdateMovement(double deltaTime)
         {

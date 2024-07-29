@@ -1,46 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SplashKitSDK;
 
 namespace Idimon
 {
-    public class GameMenu
+    public class GameMenu : Menu
     {
-        private List<MenuItem> _menuItems;
-        private bool _visible;
-        private int _selectedIndex;
+        private enum MenuState
+        {
+            Idimon,
+            Inventory,
+            Save,
+            Load,
+            Setting
+        }
 
-        public GameMenu()
+        private int _selectedIndex;
+        private MenuState _currentMenu;
+        private InventoryMenu _inventoryMenu;
+        Player _player;
+
+        public GameMenu(Player player, Window window) : base(window)
         {
             _menuItems = new List<MenuItem>
             {
                 new MenuItem("Idimon", 100, 100),
-                new MenuItem("Item", 100, 140),
+                new MenuItem("Inventory", 100, 140),
                 new MenuItem("Save", 100, 180),
                 new MenuItem("Load", 100, 220),
                 new MenuItem("Setting", 100, 260)
             };
-            _visible = false;
+            _player = player;
             _selectedIndex = 0;
             _menuItems[_selectedIndex].IsSelected = true;
-        }
-
-        public bool Visible
-        {
-            get { return _visible; }
-        }
-
-        public void Toggle()
-        {
-            _visible = !_visible;
+            _currentMenu = (MenuState)_selectedIndex;
+            _inventoryMenu = new InventoryMenu(_player, _window);
         }
 
         public void Navigate(KeyCode key)
         {
             if (!_visible) return;
+            if (_inventoryMenu.Visible) return;
 
             _menuItems[_selectedIndex].IsSelected = false;
 
@@ -54,36 +54,85 @@ namespace Idimon
             }
 
             _menuItems[_selectedIndex].IsSelected = true;
+            _currentMenu = (MenuState)_selectedIndex;
         }
 
         public void Select()
         {
             if (!_visible) return;
+            if (_inventoryMenu.Visible) return;
 
-            MenuItem selectedItem = _menuItems[_selectedIndex];
-            // Implement action for each menu item here
-            if (selectedItem.Text == "Save")
+            switch (_currentMenu)
             {
-                // Save game logic
+                case MenuState.Idimon:
+                    // Idimon logic
+                    break;
+                case MenuState.Inventory:
+                    // Inventory logic
+                    _inventoryMenu.Open();
+                    // Open();
+                    break;
+                case MenuState.Save:
+                    // Save game logic
+                    break;
+                case MenuState.Load:
+                    // Load game logic
+                    break;
+                case MenuState.Setting:
+                    // Setting logic
+                    break;
             }
-            else if (selectedItem.Text == "Load")
-            {
-                // Load game logic
-            }
-            // Add logic for other menu items as needed
         }
 
-        public void Draw()
+        public override void Draw()
         {
+            // List<Items> items = _player.Inventory.GetAllItems();
+            // for (int i = 0; i < items.Count; i++)
+            // {
+            //     items[i].Draw(_window, 100, 200 + i * 50);
+            // }
             if (!_visible) return;
-            
-            SplashKit.FillRectangle(Color.RGBAColor(0, 0, 0, 125), 0, 0, SplashKit.ScreenWidth(), SplashKit.ScreenHeight());
-            foreach (var item in _menuItems)
+            if(_inventoryMenu.Visible)
             {
-                item.Draw();
+                if(SplashKit.KeyTyped(KeyCode.XKey))
+                {
+                    _inventoryMenu.Toggle();
+                    // Toggle();
+                }
+                _inventoryMenu.Draw();
+                return;
+            }
+            else
+            {
+                SplashKit.FillRectangle(Color.RGBAColor(0, 0, 0, 125), 0, 0, SplashKit.ScreenWidth(), SplashKit.ScreenHeight());
+                foreach (var item in _menuItems)
+                {
+                    item.Draw();
+                }
             }
         }
 
-        
+        public override void HandleInput()
+        {
+            if (_inventoryMenu.Visible) return;
+
+            if (SplashKit.KeyTyped(KeyCode.XKey))
+            {
+                Toggle();
+            }
+            else if (SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
+            {
+                Navigate(SplashKit.KeyTyped(KeyCode.DownKey) ? KeyCode.DownKey : KeyCode.UpKey);
+            }
+            else if (SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
+            {
+                Select();
+            }
+        }
+
+        public override void Open()
+        {
+            Toggle();
+        }
     }
 }

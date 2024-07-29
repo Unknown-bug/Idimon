@@ -1,5 +1,6 @@
 ﻿using System;
 using SplashKitSDK;
+using Idimon;
 
 namespace Idimon
 {
@@ -9,6 +10,7 @@ namespace Idimon
         private Player _player;
         private Map _gameMap;
         private SplashKitSDK.Timer _timer;
+        private Items _candy;
         private char[,] mapData = {
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', 'x', '*', '*', '*', '*', 'x', '*', '*', '*', '*', '*', '*' },
@@ -39,9 +41,14 @@ namespace Idimon
 
         public GameScreen(Window window) : base(window)
         {
-            _gameMenu = new GameMenu();
             _gameMap = new Map(mapData, blockTypes, _window);
+
             _player = new Player("Ash", _characterImages, new Point2D() { X = 400, Y = 300 }, _window, _gameMap);
+            _candy = new Items("Candy", "use to catch Idimon", "img\\items\\Candy2.png", 5, true, true);
+            _player.Inventory.AddItem(_candy);
+
+            _gameMenu = new GameMenu(_player, _window);
+            
             _timer = new SplashKitSDK.Timer("GameTimer");
             _timer.Start();
         }
@@ -67,22 +74,8 @@ namespace Idimon
 
         public override void HandleInput()
         {
-            if (SplashKit.KeyTyped(KeyCode.XKey))
-            {
-                _gameMenu.Toggle();
-            }
+            _gameMenu.HandleInput();
 
-            if (_gameMenu.Visible)
-            {
-                if (SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
-                {
-                    _gameMenu.Navigate(SplashKit.KeyTyped(KeyCode.DownKey) ? KeyCode.DownKey : KeyCode.UpKey);
-                }
-                else if (SplashKit.KeyTyped(KeyCode.ZKey))
-                {
-                    _gameMenu.Select();
-                }
-            }
         }
     }
 }
