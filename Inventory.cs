@@ -65,7 +65,6 @@ namespace Idimon
 
             foreach (Items item in _items.Values)
             {
-                SplashKit.FillRectangle(Color.RGBAColor(255, 255, 255, 125), x, y, 30, 30);
                 item.Draw(window, x, y);
                 y += ITEM_SPACING; // Adjust spacing as needed
             }

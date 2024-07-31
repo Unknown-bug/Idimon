@@ -86,11 +86,6 @@ namespace Idimon
 
         public override void Draw()
         {
-            // List<Items> items = _player.Inventory.GetAllItems();
-            // for (int i = 0; i < items.Count; i++)
-            // {
-            //     items[i].Draw(_window, 100, 200 + i * 50);
-            // }
             if (!_visible) return;
             if(_inventoryMenu.Visible)
             {
@@ -114,7 +109,11 @@ namespace Idimon
 
         public override void HandleInput()
         {
-            if (_inventoryMenu.Visible) return;
+            if (_inventoryMenu.Visible)
+            {
+                _inventoryMenu.HandleInput();
+                return;
+            }
 
             if (SplashKit.KeyTyped(KeyCode.XKey))
             {

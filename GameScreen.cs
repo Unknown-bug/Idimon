@@ -10,7 +10,6 @@ namespace Idimon
         private Player _player;
         private Map _gameMap;
         private SplashKitSDK.Timer _timer;
-        private Items _candy;
         private char[,] mapData = {
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', 'x', '*', '*', '*', '*', 'x', '*', '*', '*', '*', '*', '*' },
@@ -30,6 +29,11 @@ namespace Idimon
             { '*', new Block("grass", "img/Grass.png") },
             { 'x', new Block("stone", "img/PlayerIMG/down0.png") }
         };
+        private Dictionary<string, Items> _items = new Dictionary<string, Items>
+        {
+            { "Candy", new Items("Candy", "use to catch Idimon", "img\\items\\Candy2.png", 1, true, true, "Items") },
+            { "Master Candy", new Items("Master Candy", "use to catch Idimon", "img\\items\\candy1.png", 1, true, true, "Items") }
+        };
 
         private List<string> _characterImages = new List<string>
         {
@@ -44,11 +48,11 @@ namespace Idimon
             _gameMap = new Map(mapData, blockTypes, _window);
 
             _player = new Player("Ash", _characterImages, new Point2D() { X = 400, Y = 300 }, _window, _gameMap);
-            _candy = new Items("Candy", "use to catch Idimon", "img\\items\\Candy2.png", 5, true, true);
-            _player.Inventory.AddItem(_candy);
+            _player.Inventory.AddItem(_items["Candy"]);
+            _player.Inventory.AddItem(_items["Master Candy"]);
 
             _gameMenu = new GameMenu(_player, _window);
-            
+
             _timer = new SplashKitSDK.Timer("GameTimer");
             _timer.Start();
         }
@@ -75,7 +79,7 @@ namespace Idimon
         public override void HandleInput()
         {
             _gameMenu.HandleInput();
-
+            
         }
     }
 }
