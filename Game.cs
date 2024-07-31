@@ -22,7 +22,20 @@ namespace Idimon
                 CurrentScreen.Update();
                 CurrentScreen.Draw();
                 SplashKit.RefreshScreen();
+                
+                // Check for right-click and get mouse position
+                CheckRightClick();
             } while (!_window.CloseRequested);
+        }
+
+        private void CheckRightClick()
+        {
+            if (SplashKit.MouseClicked(MouseButton.RightButton))
+            {
+                Point2D mousePosition = SplashKit.MousePosition();
+                // You can now use mousePosition.X and mousePosition.Y
+                System.Console.WriteLine($"Right-click at ({mousePosition.X}, {mousePosition.Y})");
+            }
         }
     }
 }

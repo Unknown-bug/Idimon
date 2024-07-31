@@ -22,7 +22,8 @@ public class MenuItem
         {
             // Draw border rectangle
             SplashKit.FillRectangle(Color.Black, X - 5, Y - 5, SplashKit.TextWidth(Text, "Arial", 30) + 10, SplashKit.TextHeight(Text, "Arial", 30) + 10);
-             // Draw selected text
+            
+            // Draw selected text
             SplashKit.DrawText(Text, Color.Yellow, "Arial", 30, X, Y);
         }
         else
