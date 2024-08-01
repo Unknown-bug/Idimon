@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SplashKitSDK;
 
 namespace Idimon
 {
@@ -17,11 +18,11 @@ namespace Idimon
         public int Attack { get; protected set; }
         public int Defense { get; protected set; }
         public int Speed { get; protected set; }
-        public string Image { get; protected set; }
+        public Bitmap Image { get; protected set; }
         public int ExperienceToNextLevel { get; protected set; }
         public List<Skills> Skills { get; protected set; }
 
-        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed)
+        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed, string imagePaths)
         {
             Name = name;
             Level = level;
@@ -32,6 +33,7 @@ namespace Idimon
             Defense = defense;
             Speed = speed;
             Skills = new List<Skills>();
+            Image = SplashKit.LoadBitmap(name, imagePaths);
             ExperienceToNextLevel = CalculateExperienceToNextLevel();
         }
         
