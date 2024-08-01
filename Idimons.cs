@@ -21,8 +21,10 @@ namespace Idimon
         public Bitmap Image { get; protected set; }
         public int ExperienceToNextLevel { get; protected set; }
         public List<Skills> Skills { get; protected set; }
+        public bool IsSelected { get; set; }
+        public string Rank { get; set; }
 
-        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed, string imagePaths)
+        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed, string imagePaths, string rank)
         {
             Name = name;
             Level = level;
@@ -35,6 +37,7 @@ namespace Idimon
             Skills = new List<Skills>();
             Image = SplashKit.LoadBitmap(name, imagePaths);
             ExperienceToNextLevel = CalculateExperienceToNextLevel();
+            Rank = rank;
         }
         
         private int CalculateExperienceToNextLevel()
@@ -96,6 +99,17 @@ namespace Idimon
             {
                 CurrentHP = MaxHP;
             }
+        }
+
+        public void Draw(double x, double y)
+        {
+            SplashKit.DrawBitmap(Image, x, y);
+        }
+
+        public void DrawHPBar(double x, double y, double width, double height)
+        {
+            SplashKit.DrawRectangle(Color.White, x, y, width, height);
+            SplashKit.FillRectangle(Color.Red, x + 1, y + 1, width * CurrentHP / MaxHP - 2 , height - 2);
         }
     }
 }
