@@ -13,10 +13,11 @@ namespace Idimon
         // Window _window;
         private int _width, _length;
         private Point _point;
-        private List<Items> items;
+        private List<Items> _items;
         private Player _player;
         private int _selectedIndex;
         private MenuState _currentMenu;
+        private string _type;
 
         public InventoryMenu(Player player, Window window) : base( window)
         { 
@@ -30,7 +31,8 @@ namespace Idimon
             _menuItems[_selectedIndex].IsSelected = true;
             _currentMenu = (MenuState)_selectedIndex;
             _player = player;
-            items = _player.Inventory.GetAllItems();
+            _items = new List<Items>();
+            _type = "";
         }
 
         public void Select()
@@ -41,12 +43,15 @@ namespace Idimon
             {
                 case MenuState.Items:
                     // Items logic
+                    _type = "Items";
                     break;
                 case MenuState.Equipment:
                     // Equipment logic
+                    _type = "Equipment";
                     break;
                 case MenuState.KeyItems:
                     // Key Items logic
+                    _type = "Key Items";
                     break;
             }
         }
@@ -55,8 +60,8 @@ namespace Idimon
         {
             if (!_visible) return;
             // SplashKit.DrawText("Name", Color.Yellow, "Arial", 30, 100 + 5, 200);
-            SplashKit.FillRectangle(Color.RGBAColor(38, 35, 67, 140), 10, 0, SplashKit.ScreenWidth() - 20, 100);
-            SplashKit.DrawRectangle(Color.RGBAColor(0, 0, 0, 255), 10, 0, SplashKit.ScreenWidth() - 20, 100);
+            SplashKit.FillRectangle(Color.RGBAColor(38, 35, 67, 140), 10, 5, SplashKit.ScreenWidth() - 20, 100);
+            SplashKit.DrawRectangle(Color.RGBAColor(0, 0, 0, 255), 10, 5, SplashKit.ScreenWidth() - 20, 100);
 
             SplashKit.FillRectangle(Color.RGBAColor(38, 35, 67, 140), 10, 110, SplashKit.ScreenWidth() - 20, 60);
             SplashKit.DrawRectangle(Color.RGBAColor(0, 0, 0, 255), 10, 110, SplashKit.ScreenWidth() - 20, 60);
@@ -71,14 +76,9 @@ namespace Idimon
                 item.Draw();
             }
 
-            List<Items> items = _player.Inventory.GetAllItems();
+            _items = _player.Inventory.GetAllItems(_type);
 
-            _player.Inventory.DisplayInventory(_window, 100, 200);
-            // for (int i = 0; i < items.Count; i++)
-            // {
-            //     // SplashKit.FillRectangle(Color.RGBAColor(255, 255, 255, 125), x, y, 35, 35);
-            //     items[i].Draw(_window, 100, 200 + i * 50);
-            // }
+            _player.Inventory.DisplayInventory(_window, 100, 200, _type);
         }
 
         public void Navigate(KeyCode key)
@@ -103,10 +103,21 @@ namespace Idimon
         public override void HandleInput()
         {
             if (!_visible) return;
-
+            // Console.WriteLine("Handle Input");
+            // KeyCode key = SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.RightKey) ? KeyCode.DownKey : KeyCode.UpKey;
+            if(_player.Inventory.Visible)
+            {
+                _type = _player.Inventory.HandleInput(_type);
+                return;
+            }
             if (SplashKit.KeyTyped(KeyCode.XKey))
             {
-                Console.WriteLine("Toggle");
+                _menuItems[_selectedIndex].IsSelected = false;
+                _type = "";
+                _selectedIndex = 0;
+                _currentMenu = (MenuState)_selectedIndex;
+                _menuItems[_selectedIndex].IsSelected = true;
+                Draw();
                 Toggle();
             }
             else if (SplashKit.KeyTyped(KeyCode.RightKey) || SplashKit.KeyTyped(KeyCode.LeftKey))
@@ -117,6 +128,7 @@ namespace Idimon
             else if (SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
             {
                 Select();
+                _player.Inventory.Toggle();
             }
         }
 

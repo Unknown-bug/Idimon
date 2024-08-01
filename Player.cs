@@ -3,7 +3,7 @@ using SplashKitSDK;
 
 namespace Idimon
 {
-    public class Player : Character
+    public class Player : Character, IHaveInventory
     {
         private const double Speed = 200; // Pixels per second
         public Vector2D MoveVector { get; private set; }
