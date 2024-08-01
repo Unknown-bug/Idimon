@@ -7,10 +7,25 @@ namespace Idimon
     public class Inventory
     {
         private Dictionary<string, Items> _items;
+        private int _selectedIndex;
+        private bool _visible;
 
         public Inventory()
         {
             _items = new Dictionary<string, Items>();
+            _selectedIndex = 0;
+            _visible = false;
+        }
+
+        public bool Visible
+        {
+            get { return _visible; }
+            set { _visible = value; }
+        }
+
+        public void Toggle()
+        {
+            _visible = !_visible;
         }
 
         // Add item to the inventory
@@ -51,23 +66,116 @@ namespace Idimon
         }
 
         // Get the list of all items
-        public List<Items> GetAllItems()
+        public List<Items> GetAllItems(string type)
         {
-            return new List<Items>(_items.Values);
+            List<Items> items = new List<Items>();
+            foreach (Items item in _items.Values)
+            {
+                if (item.Type == type)
+                {
+                    items.Add(item);
+                }
+            }
+            return items;
         }
 
         // Display the inventory
-        public void DisplayInventory(Window window, double startX, double startY)
+        public void DisplayInventory(Window window, double startX, double startY, string type)
         {
             double x = startX;
             double y = startY;
-            const double ITEM_SPACING = 50;
 
-            foreach (Items item in _items.Values)
+            double X_SPACING = 105 + SplashKit.ScreenWidth() / 3;
+            double Y_SPACING = 50;
+
+            List<Items> items = GetAllItems(type);
+            int i = 0;
+
+            foreach (Items item in items)
             {
+                i += 1;
                 item.Draw(window, x, y);
-                y += ITEM_SPACING; // Adjust spacing as needed
+                if (i % 2 != 0)
+                {
+                    x += X_SPACING;
+                }
+                else
+                {
+                    x = startX;
+                    y += Y_SPACING;
+                }
             }
+
+            // Highlight the selected item
+            if (items.Count > 0)
+            {
+                items[_selectedIndex].IsSelected = true;
+            }
+        }
+
+        // Navigate through the items in the inventory
+        public void Navigate(string type)
+        {
+            List<Items> items = GetAllItems(type);
+            if (items.Count == 0) return;
+
+            // items[_selectedIndex].IsSelected = false;
+            if (SplashKit.KeyTyped(KeyCode.RightKey))
+            {
+                items[_selectedIndex].IsSelected = false;
+                _selectedIndex = (_selectedIndex + 1) % items.Count;
+            }
+            else if (SplashKit.KeyTyped(KeyCode.LeftKey))
+            {
+                items[_selectedIndex].IsSelected = false;
+                _selectedIndex = (_selectedIndex - 1 + items.Count) % items.Count;
+            }
+            else if (SplashKit.KeyTyped(KeyCode.DownKey))
+            {
+                items[_selectedIndex].IsSelected = false;
+                if(_items.Count % 2 != 0 && _selectedIndex == _items.Count - 1)
+                {
+                    _selectedIndex = (_selectedIndex + 1) % items.Count;
+                }
+                else
+                {
+                    _selectedIndex = (_selectedIndex + 2) % items.Count;
+                }
+            }
+            else if (SplashKit.KeyTyped(KeyCode.UpKey))
+            {
+                items[_selectedIndex].IsSelected = false;
+                if(_items.Count % 2 != 0 && _selectedIndex == _items.Count - 1)
+                {
+                    _selectedIndex = (_selectedIndex - 1 + items.Count) % items.Count;
+                }
+                else
+                {
+                    _selectedIndex = (_selectedIndex - 2 + items.Count) % items.Count;
+                }
+            }
+        }
+
+        public string HandleInput(string type)
+        {
+            List<Items> items = GetAllItems(type);
+            if (SplashKit.KeyTyped(KeyCode.XKey))
+            {
+                if (items.Count == 0) 
+                {
+                    Toggle();
+                    SplashKit.Delay(100);
+                    return "";
+                }
+                items[_selectedIndex].IsSelected = false;
+
+                _selectedIndex = 0;
+                Toggle();
+                SplashKit.Delay(100);
+                return "";
+            }
+            Navigate(type);
+            return type;
         }
 
         // Get the total number of items

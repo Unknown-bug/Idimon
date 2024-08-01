@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Idimon")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d550457815a4f9e31cc925e71fbb2c1965fde60")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b30620ab9cd478b13b1cac73e6c7c5a34582899")]
 [assembly: System.Reflection.AssemblyProductAttribute("Idimon")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Idimon")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

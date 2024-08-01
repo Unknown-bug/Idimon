@@ -42,23 +42,27 @@ namespace Idimon
 
         public void Draw(Window window, double x, double y)
         {
-            SplashKit.LoadFont("Arial", "arial.ttf");
-           
-            SplashKit.DrawRectangle(Color.RGBColor(255, 255, 255), x - 5, y - 5, SplashKit.ScreenWidth() / 3, 40);
-            window.DrawBitmap(Background, x, y/*, SplashKit.OptionScaleBmp(2,2)*/);
-            window.DrawBitmap(Image, x, y/*, SplashKit.OptionScaleBmp(2,2)*/);
-
-            SplashKit.DrawText(Quantity.ToString(), Color.White, "Arial", 30, x + SplashKit.ScreenWidth() / 3 - 50, y);
-
             if (IsSelected)
             {
-                SplashKit.FillRectangle(Color.Black, x - 5, y - 5, SplashKit.TextWidth(Name, "Arial", 30) + 10, SplashKit.TextHeight(Name, "Arial", 30) + 10);
-                SplashKit.DrawText(": " + Name, Color.Yellow, "Arial", 30, x + 35, y );
+                SplashKit.DrawText(Description, Color.White, "Arial", 25, 15, 10 );
+                SplashKit.FillRectangle(Color.RGBAColor(255,255,0,150), x - 5, y - 5, SplashKit.ScreenWidth() / 3, 40);
+                SplashKit.DrawText(Name, Color.Yellow, "Arial", 30, x + 35, y );
             }
             else
             {
                 SplashKit.DrawText(Name, Color.White, "Arial", 30, x + 35, y );
             }
+
+            SplashKit.LoadFont("Arial", "arial.ttf");
+            SplashKit.DrawRectangle(Color.RGBColor(255, 255, 255), x - 5, y - 5, SplashKit.ScreenWidth() / 3, 40);
+            window.DrawBitmap(Background, x, y/*, SplashKit.OptionScaleBmp(2,2)*/);
+            window.DrawBitmap(Image, x, y/*, SplashKit.OptionScaleBmp(2,2)*/);
+            SplashKit.DrawText(Quantity.ToString(), Color.White, "Arial", 30, x + SplashKit.ScreenWidth() / 3 - 50, y);
+        }
+
+        public void Toggle()
+        {
+            IsSelected = !IsSelected;
         }
     }
 }

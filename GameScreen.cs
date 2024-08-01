@@ -8,9 +8,9 @@ namespace Idimon
     {
         private GameMenu _gameMenu;
         private Player _player;
-        private Map _gameMap;
+        private Map _ObjectMap, _BackgroundMap;
         private SplashKitSDK.Timer _timer;
-        private char[,] mapData = {
+        private char[,] ObjectmapData = {
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', 'x', '*', '*', '*', '*', 'x', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', 'x', '*', '*', '*', '*', 'x', '*', '*', '*', '*', '*', '*' },
@@ -24,6 +24,21 @@ namespace Idimon
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' }
             };
+
+        private char[,] BackgroudmapData = {
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' }
+        };
         private Dictionary<char, Block> blockTypes = new Dictionary<char, Block>
         {
             { '*', new Block("grass", "img/Grass.png") },
@@ -31,8 +46,10 @@ namespace Idimon
         };
         private Dictionary<string, Items> _items = new Dictionary<string, Items>
         {
-            { "Candy", new Items("Candy", "use to catch Idimon", "img\\items\\Candy2.png", 1, true, true, "Items") },
-            { "Master Candy", new Items("Master Candy", "use to catch Idimon", "img\\items\\candy1.png", 1, true, true, "Items") }
+            { "Candy", new Items("Candy", "Use to catch Idimon", "img\\items\\Candy2.png", 1, true, true, "Items") },
+            { "Master Candy", new Items("Master Candy", "Use to catch Idimon", "img\\items\\candy1.png", 1, true, true, "Items") }, 
+            { "Potion", new Items("Potion", "Heal 50 HP", "img\\items\\background.png", 1, true, true, "Items") },
+            { "EXP Sharing", new Items("EXP Sharing", "Share EXP with all party members", "img\\items\\background.png", 1, true, true, "Key Items") }
         };
 
         private List<string> _characterImages = new List<string>
@@ -45,11 +62,14 @@ namespace Idimon
 
         public GameScreen(Window window) : base(window)
         {
-            _gameMap = new Map(mapData, blockTypes, _window);
+            _ObjectMap = new Map(ObjectmapData, blockTypes, _window);
+            _BackgroundMap = new Map(BackgroudmapData, blockTypes, _window);
 
-            _player = new Player("Ash", _characterImages, new Point2D() { X = 400, Y = 300 }, _window, _gameMap);
+            _player = new Player("Ash", _characterImages, new Point2D() { X = 400, Y = 300 }, _window, _ObjectMap);
             _player.Inventory.AddItem(_items["Candy"]);
             _player.Inventory.AddItem(_items["Master Candy"]);
+            _player.Inventory.AddItem(_items["Potion"]);
+            _player.Inventory.AddItem(_items["EXP Sharing"]);
 
             _gameMenu = new GameMenu(_player, _window);
 
@@ -71,15 +91,16 @@ namespace Idimon
         public override void Draw()
         {
             _window.Clear(Color.White);
-            _gameMap.Draw(_player);
+            _BackgroundMap.Draw(_player);
+            _ObjectMap.Draw(_player);
             _player.Draw();
+
             _gameMenu.Draw();
         }
 
         public override void HandleInput()
         {
             _gameMenu.HandleInput();
-            
         }
     }
 }
