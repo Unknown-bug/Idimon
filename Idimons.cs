@@ -111,5 +111,29 @@ namespace Idimon
             SplashKit.DrawRectangle(Color.White, x, y, width, height);
             SplashKit.FillRectangle(Color.Red, x + 1, y + 1, width * CurrentHP / MaxHP - 2 , height - 2);
         }
+
+        public void Attacking(Idimons opponent, int moveIndex)
+        {
+            if (moveIndex >= 0 && moveIndex < Skills.Count)
+            {
+                Console.WriteLine(Skills[moveIndex].Damage);
+                Skills[moveIndex].Use(this, opponent);
+            }
+            else
+            {
+                Console.WriteLine($"{Name} cannot use this move.");
+            }
+        }
+
+        public bool IsFasterThan(Idimons opponent)
+        {
+            return this.Speed > opponent.Speed;
+        }
+
+        public void Faint()
+        {
+            Console.WriteLine($"{Name} has fainted!");
+            // Additional logic for fainting
+        }
     }
 }

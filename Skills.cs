@@ -19,7 +19,7 @@ namespace Idimon
 
         public void Use(Idimons user, Idimons opponent)
         {
-            int damageDealt = Damage - opponent.Defense;
+            int damageDealt = Damage * user.Attack / opponent.Defense;
             if (damageDealt < 0) damageDealt = 0;
             opponent.TakeDamage(damageDealt);
             Console.WriteLine($"{user.Name} used {Name} and dealt {damageDealt} damage to {opponent.Name}.");
