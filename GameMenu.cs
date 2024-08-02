@@ -18,6 +18,7 @@ namespace Idimon
         private int _selectedIndex, _idimonIndex;
         private MenuState _currentMenu;
         private InventoryMenu _inventoryMenu;
+        private IdimonMenu _idimonMenu;
         Player _player;
 
         public GameMenu(Player player, Window window) : base(window)
@@ -36,12 +37,13 @@ namespace Idimon
             _menuItems[_selectedIndex].IsSelected = true;
             _currentMenu = (MenuState)_selectedIndex;
             _inventoryMenu = new InventoryMenu(_player, _window, "Items");
+            _idimonMenu = new IdimonMenu(_player.Inventory.Idimons[0] ,_window, "Status");
         }
 
         public void Navigate(KeyCode key)
         {
             if (!_visible) return;
-            if (_inventoryMenu.Visible) return;
+            if (_inventoryMenu.Visible || _idimonMenu.Visible) return;
             if (_inventoryMenu.SelectedMenu == "Idimons")
             {
                 if(_player.Inventory.Idimons.Count == 0)
@@ -83,7 +85,7 @@ namespace Idimon
         public void Select()
         {
             if (!_visible) return;
-            if (_inventoryMenu.Visible) return;
+            if (_inventoryMenu.Visible || _idimonMenu.Visible) return;
 
             switch (_currentMenu)
             {
@@ -122,6 +124,16 @@ namespace Idimon
                     // Toggle();
                 }
                 _inventoryMenu.Draw();
+                return;
+            }
+            else if(_idimonMenu.Visible)
+            {
+                if(SplashKit.KeyTyped(KeyCode.XKey))
+                {
+                    _idimonMenu.Toggle();
+                    // Toggle();
+                }
+                _idimonMenu.Draw();
                 return;
             }
             else
@@ -170,7 +182,12 @@ namespace Idimon
             }
             else if (_inventoryMenu.SelectedMenu == "Idimons")
             {
-                if (SplashKit.KeyTyped(KeyCode.XKey))
+                if(_idimonMenu.Visible)
+                {
+                    _idimonMenu.HandleInput();
+                    return;
+                }
+                else if (SplashKit.KeyTyped(KeyCode.XKey))
                 {
                     _inventoryMenu.SelectedMenu = "Items";
                     _idimonIndex = 99;
@@ -182,7 +199,10 @@ namespace Idimon
                 }
                 else if (SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
                 {
-                    Select();
+                    // GameScreen previousScreen = (GameScreen)Game.CurrentScreen;
+                    Console.WriteLine(_idimonIndex);
+                    _idimonMenu = new IdimonMenu(_player.Inventory.Idimons[_idimonIndex], _window, "Status");
+                    _idimonMenu.Open();
                 }
                 return;
             }

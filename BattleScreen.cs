@@ -10,7 +10,7 @@ namespace Idimon
         Inventory _inventory;
         Window _window;
         GameScreen _preGameScreen;
-        private int _currentIdimonIndex;
+        private int _currentIdimonIndex, _selectedIndex;
         Bitmap _background;
         List<MenuItem> _actionButtons;
         private enum Action
@@ -20,6 +20,8 @@ namespace Idimon
             Items,
             Run
         }
+        private Action _currentAction;
+        private Battle _battle;
 
         public BattleScreen(Window window, List<Idimons> player, List<Idimons> opponents, Inventory inventory, GameScreen preGameScreen) : base(window)
         {
@@ -30,6 +32,8 @@ namespace Idimon
             _preGameScreen = preGameScreen;
             _background = new Bitmap("battle", "img\\CombatBackground.jpg");
             _currentIdimonIndex = 0;
+            _selectedIndex = 0;
+            _currentAction = (Action)99;
             _actionButtons = new List<MenuItem>
             {
                 new MenuItem("Skills", 50, SplashKit.ScreenHeight() / 3 * 2 + 30),
@@ -37,12 +41,39 @@ namespace Idimon
                 new MenuItem("Items", 50, SplashKit.ScreenHeight() / 3 * 2 + 130),
                 new MenuItem("Run", 50, SplashKit.ScreenHeight() / 3 * 2 + 180)
             };
+            _actionButtons[_selectedIndex].IsSelected = true;
+            _battle = new Battle(player, opponents, this);
+        }
+
+        public void ExitBattle()
+        {
+            Game.CurrentScreen = _preGameScreen;
+        }
+
+        public void Select()
+        {
+            switch (_currentAction)
+            {
+                case Action.Skills:
+                    // Skills logic
+                    break;
+                case Action.Swich:
+                    // Items logic
+                    break;
+                case Action.Items:
+                    // Equipment logic
+                    break;
+                case Action.Run:
+                    // Run logic
+                    ExitBattle();
+                    break;
+            }
         }
 
         public override void Update()
         {
             // throw new NotImplementedException();
-
+            _battle.ExecuteTurn();
         }
         
         public override void Draw()
@@ -69,15 +100,37 @@ namespace Idimon
             _window.Refresh(60);
         }
 
+        public void Navigate(KeyCode key)
+        {
+            _actionButtons[_selectedIndex].IsSelected = false;
+
+            if (key == KeyCode.DownKey)
+            {
+                _selectedIndex = (_selectedIndex + 1) % _actionButtons.Count;
+            }
+            else if (key == KeyCode.UpKey)
+            {
+                _selectedIndex = (_selectedIndex - 1 + _actionButtons.Count) % _actionButtons.Count;
+            }
+
+            _actionButtons[_selectedIndex].IsSelected = true;
+            _currentAction = (Action)_selectedIndex;
+        }
+
         public override void HandleInput()
         {
             if(SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
             {
                 // Implement battle logic
+                Select();
             }
             else if(SplashKit.KeyTyped(KeyCode.XKey))
             {
-                Game.CurrentScreen = _preGameScreen;
+                ExitBattle();
+            }
+            else if (SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
+            {
+                Navigate(SplashKit.KeyTyped(KeyCode.DownKey) ? KeyCode.DownKey : KeyCode.UpKey);
             }
             // throw new NotImplementedException();
         }
