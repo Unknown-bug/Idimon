@@ -18,8 +18,9 @@ namespace Idimon
         private int _selectedIndex;
         private MenuState _currentMenu;
         private string _type;
+        public string SelectedMenu { get; set; }
 
-        public InventoryMenu(Player player, Window window) : base( window)
+        public InventoryMenu(Player player, Window window, string selectedMenu) : base( window)
         { 
             _menuItems = new List<MenuItem>
             {
@@ -33,6 +34,7 @@ namespace Idimon
             _player = player;
             _items = new List<Items>();
             _type = "";
+            SelectedMenu = selectedMenu;
         }
 
         public void Select()
@@ -59,6 +61,11 @@ namespace Idimon
         public override void Draw()
         {
             if (!_visible) return;
+            if(_type == "Idimons")
+            {
+
+                return;
+            }
             // SplashKit.DrawText("Name", Color.Yellow, "Arial", 30, 100 + 5, 200);
             SplashKit.FillRectangle(Color.RGBAColor(38, 35, 67, 140), 10, 5, SplashKit.ScreenWidth() - 20, 100);
             SplashKit.DrawRectangle(Color.RGBAColor(0, 0, 0, 255), 10, 5, SplashKit.ScreenWidth() - 20, 100);
@@ -85,6 +92,12 @@ namespace Idimon
         {
             if (!_visible) return;
 
+            if(_type == "Idimons")
+            {
+                
+                return;
+            }
+
             _menuItems[_selectedIndex].IsSelected = false;
 
             if (key == KeyCode.RightKey)
@@ -103,8 +116,13 @@ namespace Idimon
         public override void HandleInput()
         {
             if (!_visible) return;
-            // Console.WriteLine("Handle Input");
-            // KeyCode key = SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.RightKey) ? KeyCode.DownKey : KeyCode.UpKey;
+
+            if(_type == "Idimons")
+            {
+                
+                return;
+            }
+            
             if(_player.Inventory.Visible)
             {
                 _type = _player.Inventory.HandleInput(_type);
