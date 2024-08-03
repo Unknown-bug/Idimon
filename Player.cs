@@ -139,7 +139,6 @@ namespace Idimon
             // Console.WriteLine(preX + " " + preY + "p");
             // Console.WriteLine(newX + " " + newY);
 
-
             MoveVector = new Vector2D() { X = dx, Y = dy };
 
             if (isMoving && _map.CanMoveTo((int)newY, (int)newX))

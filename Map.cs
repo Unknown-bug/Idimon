@@ -26,6 +26,8 @@ namespace Idimon
             {
                 return false;
             }
+            Console.WriteLine(x + " " + y);
+            Console.WriteLine(_blockTypes[_objectMapData[y, x]].Type);
             return !_blockTypes[_objectMapData[y, x]].IsSolid;
         }
 

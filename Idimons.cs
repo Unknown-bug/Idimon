@@ -118,6 +118,11 @@ namespace Idimon
             {
                 Console.WriteLine(Skills[moveIndex].Damage);
                 Skills[moveIndex].Use(this, opponent);
+
+                // SplashKit.FillRectangle(Color.White, 0, SplashKit.ScreenHeight() / 3 * 2, SplashKit.ScreenWidth(), 2);
+                // SplashKit.FillRectangle(Color.White, SplashKit.ScreenWidth() / 4, SplashKit.ScreenHeight() / 3 * 2, 2, SplashKit.ScreenHeight());
+                
+                
             }
             else
             {

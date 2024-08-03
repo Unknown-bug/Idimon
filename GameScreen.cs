@@ -15,7 +15,7 @@ namespace Idimon
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', 'x', 'x', 'x', 'x', 'x', 'x', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', 'x', 'x', 'x', 'x', 'x', 'x', '*', '*', '*', '*', '*', '*' },
-            { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
+            { '*', '*', '*', '*', '*', '*', '*', 'h', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
@@ -42,7 +42,8 @@ namespace Idimon
         private Dictionary<char, Block> blockTypes = new Dictionary<char, Block>
         {
             { '*', new Block("grass", "img/Grass.png", false) },
-            { 'x', new Block("Tall Grass", "img/TallGrass.png", false) }
+            { 'x', new Block("Tall Grass", "img/TallGrass.png", false) },
+            { 'h', new Block("Healer", "img/NPC/Heal.png", true) }
         };
         private Dictionary<string, Items> _items = new Dictionary<string, Items>
         {

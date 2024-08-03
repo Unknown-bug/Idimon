@@ -108,6 +108,7 @@ namespace Idimon
             _window.Clear(Color.Black);
             SplashKit.FillRectangle(Color.White, 0, SplashKit.ScreenHeight() / 3 * 2, SplashKit.ScreenWidth(), 2);
             SplashKit.FillRectangle(Color.White, SplashKit.ScreenWidth() / 4, SplashKit.ScreenHeight() / 3 * 2, 2, SplashKit.ScreenHeight());
+            
             foreach (MenuItem button in _actionButtons)
             {
                 button.Draw();
@@ -155,6 +156,11 @@ namespace Idimon
 
             _window.Refresh(60);
         }
+
+        // public void drawSkill()
+        // {
+        //     SplashKit.FillRectangle(Color.Black, 0, 0, SplashKit.ScreenWidth(), SplashKit.ScreenHeight());
+        // }
 
         public void Navigate(KeyCode key)
         {
@@ -255,39 +261,46 @@ namespace Idimon
             if (_currentTurn == Turn.Player)
             {
                 ExecutePlayerTurn(playerIdimon, opponentIdimon, selectedSkillIndex);
+                if (opponentIdimon.IsFainted())
+                {
+                    opponentIdimon.Faint();
+                    ExitBattle();
+                    // Logic for winning the battle
+                }
                 ExecuteOpponentTurn(playerIdimon, opponentIdimon);
+                if (playerIdimon.IsFainted())
+                {
+                    playerIdimon.Faint();
+                    SwitchPlayerIdimon(_currentIdimonIndex + 1);
+                    // Logic to switch Idimons
+                }
             }
             else
             {
                 ExecuteOpponentTurn(playerIdimon, opponentIdimon);
+                if (playerIdimon.IsFainted())
+                {
+                    playerIdimon.Faint();
+                    SwitchPlayerIdimon(_currentIdimonIndex + 1);
+                    // Logic to switch Idimons
+                }
                 ExecutePlayerTurn(playerIdimon, opponentIdimon, selectedSkillIndex);
+                if (opponentIdimon.IsFainted())
+                {
+                    opponentIdimon.Faint();
+                    ExitBattle();
+                    // Logic for winning the battle
+                }
             }
-
-            // After both turns, check for fainted Idimons and switch turns
-            if (!playerIdimon.IsFainted() && !opponentIdimon.IsFainted())
-            {
-                _currentTurn = DetermineFirstTurn();
-            }
-            if (playerIdimon.IsFainted())
-            {
-                playerIdimon.Faint();
-                SwitchPlayerIdimon(_currentIdimonIndex + 1);
-                // Logic to switch Idimons
-            }
-            else if (opponentIdimon.IsFainted())
-            {
-                opponentIdimon.Faint();
-                ExitBattle();
-                // Logic for winning the battle
-            }
-
             // Check if battle ends or continues
         }
 
         private void ExecutePlayerTurn(Idimons playerIdimon, Idimons opponentIdimon, int selectedSkillIndex)
         {
             // Handle player's move, currently using a placeholder skill index
+            playerIdimon.Draw(100, 100);
             playerIdimon.Attacking(opponentIdimon, selectedSkillIndex);
+            SplashKit.Delay(1000);
             _currentTurn = Turn.Opponent;
         }
 
