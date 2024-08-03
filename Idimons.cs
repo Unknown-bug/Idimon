@@ -14,7 +14,7 @@ namespace Idimon
         public int Level { get; protected set; }
         public int EXP { get; protected set; }
         public int MaxHP { get; protected set; }
-        public int CurrentHP { get; protected set; }
+        public int CurrentHP { get; set; }
         public int Attack { get; protected set; }
         public int Defense { get; protected set; }
         public int Speed { get; protected set; }

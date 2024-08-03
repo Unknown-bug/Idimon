@@ -25,20 +25,12 @@ namespace Idimon
             Player,
             Opponent
         }
-        private enum SkillsButton
-        {
-            Skill1,
-            Skill2,
-            Skill3,
-            Skill4
-        }
 
         private Turn _currentTurn;
         private Action _currentAction;
-        private Battle _battle;
         private string _type;
 
-        private int _currentSkillIndex;
+        private int _selectedIdimonIndex;
         private int _selectedSkillIndex;
 
         public BattleScreen(Window window, List<Idimons> player, List<Idimons> opponents, Inventory inventory, GameScreen preGameScreen) : base(window)
@@ -61,10 +53,10 @@ namespace Idimon
                 new MenuItem("Run", 50, SplashKit.ScreenHeight() / 3 * 2 + 180)
             };
             _actionButtons[_selectedIndex].IsSelected = true;
-            _battle = new Battle(player, opponents, this);
             _currentTurn = DetermineFirstTurn();
 
             _selectedSkillIndex = 0;
+            _selectedIdimonIndex = 0;
         }
 
         public void ExitBattle()
@@ -154,13 +146,42 @@ namespace Idimon
                 }
             }
 
+            if(_type == "Switch")
+            {
+                // Draw Idimons
+                double x = 265;
+                double y = 540;
+                int i = 0;
+
+                foreach (var idimon in _player)
+                {    
+                    if (i == _selectedIdimonIndex)
+                    {
+                        SplashKit.FillRectangle(Color.RGBAColor(255, 255, 0, 150), x - 5, y - 5, 260, 64);
+                    }
+
+                    // idimon.Draw(x, y);
+
+                    // Details
+                    SplashKit.DrawText(idimon.Name, Color.White, "Arial", 20, x, y);
+                    SplashKit.DrawText($"Level: {idimon.Level}", Color.White, "Arial", 20, x + 150, y);
+                    idimon.DrawHPBar(x, y + 34, 250, 10);
+
+                    i++;
+                    if(i % 2 == 0)
+                    {
+                        y += 70;
+                        x -= 300;
+                    }
+                    else
+                    {
+                        x += 300;
+                    }
+                }
+            }
+
             _window.Refresh(60);
         }
-
-        // public void drawSkill()
-        // {
-        //     SplashKit.FillRectangle(Color.Black, 0, 0, SplashKit.ScreenWidth(), SplashKit.ScreenHeight());
-        // }
 
         public void Navigate(KeyCode key)
         {
@@ -181,6 +202,36 @@ namespace Idimon
                 else if (key == KeyCode.LeftKey)
                 {
                     _selectedSkillIndex = (_selectedSkillIndex - 1 + _actionButtons.Count) % _actionButtons.Count;
+                }
+                return;
+            }
+            if (_type == "Switch")
+            {
+                if (key == KeyCode.DownKey)
+                {
+                    if(_player.Count %2 != 0 && _selectedIdimonIndex == _player.Count - 1)
+                    {
+                        _selectedIdimonIndex = 0;
+                        return;
+                    }
+                    _selectedIdimonIndex = (_selectedIdimonIndex + 2) % _player.Count;
+                }
+                else if (key == KeyCode.UpKey)
+                {
+                    if(_player.Count %2 != 0 && (_selectedIdimonIndex == 0 || _selectedIdimonIndex == 1))
+                    {
+                        _selectedIdimonIndex = _player.Count - 1;
+                        return;
+                    }
+                    _selectedIdimonIndex = (_selectedIdimonIndex - 2 + _player.Count) % _player.Count;
+                }
+                else if (key == KeyCode.RightKey)
+                {
+                    _selectedIdimonIndex = (_selectedIdimonIndex + 1) % _player.Count;
+                }
+                else if (key == KeyCode.LeftKey)
+                {
+                    _selectedIdimonIndex = (_selectedIdimonIndex - 1 + _player.Count) % _player.Count;
                 }
                 return;
             }
@@ -209,6 +260,11 @@ namespace Idimon
                 HandleSkillsInput();
                 return;
             }
+            if(_type == "Switch")
+            {
+                HandleSwitchInput();
+                return;
+            }
 
             if(SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
             {
@@ -228,8 +284,6 @@ namespace Idimon
             // throw new NotImplementedException();
         }
 
-
-
         public void HandleSkillsInput()
         {
             if(SplashKit.KeyTyped(KeyCode.XKey))
@@ -241,6 +295,29 @@ namespace Idimon
             {
                 Console.WriteLine(_selectedSkillIndex);
                 ExecuteTurn(_selectedSkillIndex);
+                _currentTurn = Turn.Opponent;
+            }
+            else if(SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
+            {
+                Navigate(SplashKit.KeyTyped(KeyCode.DownKey) ? KeyCode.DownKey : KeyCode.UpKey);
+            }
+            else if(SplashKit.KeyTyped(KeyCode.RightKey) || SplashKit.KeyTyped(KeyCode.LeftKey))
+            {
+                Navigate(SplashKit.KeyTyped(KeyCode.RightKey) ? KeyCode.RightKey : KeyCode.LeftKey);
+            }
+        }
+
+        public void HandleSwitchInput()
+        {
+            if(SplashKit.KeyTyped(KeyCode.XKey))
+            {
+                _type = "";
+                SplashKit.Delay(100);
+            }
+            else if(SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
+            {
+                Console.WriteLine(_selectedIdimonIndex);
+                SwitchPlayerIdimon(_selectedIdimonIndex);
                 _currentTurn = Turn.Opponent;
             }
             else if(SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
@@ -336,9 +413,10 @@ namespace Idimon
 
         private void SwitchPlayerIdimon(int newIndex)
         {
-            if (newIndex >= 0 && newIndex < _player.Count)
+            if (newIndex >= 0 && newIndex < _player.Count && newIndex != _currentIdimonIndex)
             {
                 _currentIdimonIndex = newIndex;
+                ExecuteOpponentTurn(_player[_currentIdimonIndex], _opponent[0]);
             }
         }
     }

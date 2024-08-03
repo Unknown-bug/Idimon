@@ -41,9 +41,9 @@ namespace Idimon
         };
         private Dictionary<char, Block> blockTypes = new Dictionary<char, Block>
         {
-            { '*', new Block("grass", "img/Grass.png", false) },
-            { 'x', new Block("Tall Grass", "img/TallGrass.png", false) },
-            { 'h', new Block("Healer", "img/NPC/Heal.png", true) }
+            { '*', new BackgroundBlocks("grass", "img/Grass.png", false) },
+            { 'x', new BackgroundBlocks("Tall Grass", "img/TallGrass.png", false) },
+            { 'h', new HealerBlocks("Healer", "img/NPC/Heal.png", true) }
         };
         private Dictionary<string, Items> _items = new Dictionary<string, Items>
         {

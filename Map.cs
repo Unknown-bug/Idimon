@@ -26,9 +26,9 @@ namespace Idimon
             {
                 return false;
             }
-            Console.WriteLine(x + " " + y);
-            Console.WriteLine(_blockTypes[_objectMapData[y, x]].Type);
-            return !_blockTypes[_objectMapData[y, x]].IsSolid;
+            // Console.WriteLine(x + " " + y);
+            // Console.WriteLine(_blockTypes[_objectMapData[x, y]].Type);
+            return !_blockTypes[_objectMapData[x, y]].IsSolid;
         }
 
         public void Draw(Player player)
@@ -69,11 +69,20 @@ namespace Idimon
             // _player.Draw(_player.X*64, _player.Y*64);
         }
 
-        public void HandleEnvent(int x, int y, List<Idimons> myIdimon, Inventory myInventory)
+        public void HandleEnvent(int x, int y, List<Idimons> myIdimons, Inventory myInventory)
         {
+            if (x < 0 || y < 0 || x >= _objectMapData.GetLength(0) || y >= _objectMapData.GetLength(1))
+            {
+                return;
+            }
+
             if(_blockTypes[_objectMapData[y, x]].Type == "Tall Grass")
             {
-                TouchGrassEvent(myIdimon, myInventory);
+                TouchGrassEvent(myIdimons, myInventory);
+            }
+            else if(_blockTypes[_objectMapData[y, x]].Type == "Healer")
+            {
+                _blockTypes[_objectMapData[y, x]].Interact(myIdimons, myInventory);
             }
         }
 
