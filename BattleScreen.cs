@@ -12,7 +12,7 @@ namespace Idimon
         GameScreen _preGameScreen;
         private int _currentIdimonIndex, _selectedIndex;
         Bitmap _background;
-        List<MenuItem> _actionButtons, _skillsButtons;
+        List<MenuItem> _actionButtons;
         private enum Action
         {
             Skills,
@@ -289,6 +289,7 @@ namespace Idimon
             if(SplashKit.KeyTyped(KeyCode.XKey))
             {
                 _type = "";
+                _selectedSkillIndex = 0;
                 SplashKit.Delay(100);
             }
             else if(SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
@@ -296,6 +297,8 @@ namespace Idimon
                 Console.WriteLine(_selectedSkillIndex);
                 ExecuteTurn(_selectedSkillIndex);
                 _currentTurn = Turn.Opponent;
+                _type = "";
+                _selectedSkillIndex = 0;
             }
             else if(SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
             {
@@ -312,6 +315,7 @@ namespace Idimon
             if(SplashKit.KeyTyped(KeyCode.XKey))
             {
                 _type = "";
+                _selectedIdimonIndex = 0;
                 SplashKit.Delay(100);
             }
             else if(SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
@@ -319,6 +323,8 @@ namespace Idimon
                 Console.WriteLine(_selectedIdimonIndex);
                 SwitchPlayerIdimon(_selectedIdimonIndex);
                 _currentTurn = Turn.Opponent;
+                _type = "";
+                _selectedIdimonIndex = 0;
             }
             else if(SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
             {
@@ -358,7 +364,9 @@ namespace Idimon
                 if (playerIdimon.IsFainted())
                 {
                     playerIdimon.Faint();
-                    SwitchPlayerIdimon(_currentIdimonIndex + 1);
+                    _type = "Switch";
+                    return;
+                    // SwitchPlayerIdimon(_currentIdimonIndex + 1);
                     // Logic to switch Idimons
                 }
                 ExecutePlayerTurn(playerIdimon, opponentIdimon, selectedSkillIndex);
@@ -415,8 +423,10 @@ namespace Idimon
         {
             if (newIndex >= 0 && newIndex < _player.Count && newIndex != _currentIdimonIndex)
             {
+                int pre = _currentIdimonIndex;
                 _currentIdimonIndex = newIndex;
-                ExecuteOpponentTurn(_player[_currentIdimonIndex], _opponent[0]);
+                if(!_player[pre].IsFainted())
+                    ExecuteOpponentTurn(_player[_currentIdimonIndex], _opponent[0]);
             }
         }
     }
