@@ -9,7 +9,7 @@ namespace Idimon
 
         public Game()
         {
-            _window = new Window("Shape Drawer", 960, 768);
+            _window = new Window("Idimon", 960, 768);
             CurrentScreen = new TitleScreen(_window);
         }
 
@@ -18,6 +18,7 @@ namespace Idimon
             do
             {
                 SplashKit.ProcessEvents();
+
                 CurrentScreen.HandleInput();
                 CurrentScreen.Update();
                 CurrentScreen.Draw();

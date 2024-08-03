@@ -7,12 +7,14 @@ namespace Idimon
     public class Inventory
     {
         private Dictionary<string, Items> _items;
+        private List<Idimons> _idimons;
         private int _selectedIndex;
         private bool _visible;
 
         public Inventory()
         {
             _items = new Dictionary<string, Items>();
+            _idimons = new List<Idimons>();
             _selectedIndex = 0;
             _visible = false;
         }
@@ -41,6 +43,15 @@ namespace Idimon
             }
         }
 
+        // Add idimon to the inventory
+        public void AddIdimon(Idimons idimon)
+        {
+            if(_idimons.Count < 6)
+            {
+                _idimons.Add(idimon);
+            }
+        }
+
         // Remove one quantity of the item from the inventory
         public void RemoveItem(string itemName)
         {
@@ -53,6 +64,11 @@ namespace Idimon
                     _items.Remove(itemName);
                 }
             }
+        }
+
+        public void RemoveIdimon(Idimons idimon)
+        {
+            _idimons.Remove(idimon);
         }
 
         // Find item by name
@@ -182,6 +198,11 @@ namespace Idimon
         public int GetTotalItems()
         {
             return _items.Count;
+        }
+
+        public List<Idimons> Idimons
+        {
+            get { return _idimons; }
         }
     }
 }

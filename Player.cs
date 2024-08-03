@@ -78,7 +78,7 @@ namespace Idimon
             double dx = 0, dy = 0;
             bool isMoving = false;
             Point2D newPosition = _position;
-            int newX = 0, newY = 0;
+            int newX = 0, newY = 0, preX, preY;
 
             if (SplashKit.KeyDown(KeyCode.UpKey))
             {
@@ -128,8 +128,15 @@ namespace Idimon
                 newdx = 0;
                 newdy = -32;
             }
+
+            preX = (int)(_position.X + 32) / 64 + 1;
+            preY = (int)(_position.Y + 32) / 64 + 1;
+            int tnewX = (int)(newPosition.X + 32) / 64 + 1, tnewY = (int)(newPosition.Y + 32) / 64 + 1;
+            
             newX = (int)(newPosition.X + 32 + newdx) / 64 + 1;
             newY = (int)(newPosition.Y + 32 + newdy) / 64 + 1;
+
+            // Console.WriteLine(preX + " " + preY + "p");
             // Console.WriteLine(newX + " " + newY);
 
             MoveVector = new Vector2D() { X = dx, Y = dy };
@@ -137,6 +144,10 @@ namespace Idimon
             if (isMoving && _map.CanMoveTo((int)newY, (int)newX))
             {
                 Move(dx, dy);
+                if(tnewX != preX || tnewY != preY)
+                {
+                    _map.HandleEnvent(newX, newY, Inventory.Idimons, Inventory);
+                }
                 UpdateAnimation(deltaTime); // Update the animation frame only when moving
             }
             else if (!isMoving)
