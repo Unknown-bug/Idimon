@@ -26,8 +26,6 @@ namespace Idimon
             {
                 return false;
             }
-            // Console.WriteLine(x + " " + y);
-            // Console.WriteLine(_blockTypes[_objectMapData[x, y]].Type);
             return !_blockTypes[_objectMapData[x, y]].IsSolid;
         }
 
@@ -48,7 +46,6 @@ namespace Idimon
             {
                 for (int x = 0; x < screenWidth / _blockSize; x++)
                 {
-                    // Console.WriteLine(playerX + " " + playerY);
                     int mapX = startX + x;
                     int mapY = startY + y;
                     if (mapX >= 0 && mapY >= 0 && mapX < screenWidth / _blockSize && mapY < screenHeight / _blockSize)
@@ -88,7 +85,7 @@ namespace Idimon
 
         public void TouchGrassEvent(List<Idimons> myIdimon, Inventory myInventory)
         {
-           List<Idimons> idimons = new List<Idimons>
+            List<Idimons> idimons = new List<Idimons>
             {
                 new VH(),
                 new tiger(),
@@ -101,20 +98,13 @@ namespace Idimon
             Idimons encounteredIdimon = PerformGacha(idimons, 0.30);
             if (encounteredIdimon != null)
             {
-                // Console.WriteLine($"You have encountered a wild {encounteredIdimon.Name}!");
+                Console.WriteLine($"You have encountered a wild {encounteredIdimon.Name}!");
                 List<Idimons> opponent = new List<Idimons> {
                     encounteredIdimon
                 };
                 GameScreen pre = (GameScreen)Game.CurrentScreen; 
                 BattleScreen newBattle = new BattleScreen(_window, myIdimon, opponent, myInventory, pre);
                 Game.CurrentScreen = newBattle;
-                // Console.WriteLine(newBattle.Visible);
-                // while( newBattle.Visible )
-                // {
-                //     newBattle.Draw();
-                //     newBattle.HandleInput();
-                //     // SplashKit.Delay(60);
-                // }
             }
             else
             {

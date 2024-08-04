@@ -47,10 +47,14 @@ namespace Idimon
         };
         private Dictionary<string, Items> _items = new Dictionary<string, Items>
         {
-            { "Candy", new Items("Candy", "Use to catch Idimon", "img\\items\\Candy2.png", 1, true, true, "Items") },
-            { "Master Candy", new Items("Master Candy", "Use to catch Idimon", "img\\items\\candy1.png", 1, true, true, "Items") }, 
-            { "Potion", new Items("Potion", "Heal 50 HP", "img\\items\\background.png", 1, true, true, "Items") },
-            { "EXP Sharing", new Items("EXP Sharing", "Share EXP with all party members", "img\\items\\background.png", 1, true, true, "Key Items") }
+            // { "Candy", new Items("Candy", "Use to catch Idimon", "img\\items\\Candy2.png", 1, true, true, "Items") },
+            // { "Master Candy", new Items("Master Candy", "Use to catch Idimon", "img\\items\\candy1.png", 1, true, true, "Items") }, 
+            // { "Potion", new Items("Potion", "Heal 50 HP", "img\\items\\background.png", 1, true, true, "Items") },
+            // { "EXP Sharing", new Items("EXP Sharing", "Share EXP with all party members", "img\\items\\background.png", 1, true, true, "Key Items") }
+            { "Candy", new Candy("Candy", "Use to catch Idimon", "img\\items\\Candy2.png", 0.5) },
+            { "Master Candy", new Candy("Master Candy", "Use to catch Idimon", "img\\items\\candy1.png", 1) }, 
+            { "Potion", new Potion("Potion", "Heal 50 HP", "img\\items\\background.png", 50) },
+            // { "EXP Sharing", new Items("EXP Sharing", "Share EXP with all party members", "img\\items\\background.png", 1, true, true, "Key Items") }
         };
 
         private List<Idimons> idimons = new List<Idimons>
@@ -79,14 +83,17 @@ namespace Idimon
             _player.Inventory.AddItem(_items["Candy"]);
             _player.Inventory.AddItem(_items["Master Candy"]);
             _player.Inventory.AddItem(_items["Potion"]);
-            _player.Inventory.AddItem(_items["EXP Sharing"]);
+            // _player.Inventory.AddItem(_items["EXP Sharing"]);
 
-            _player.Inventory.AddIdimon(idimons[0]);
-            _player.Inventory.AddIdimon(idimons[1]);
-            _player.Inventory.AddIdimon(idimons[1]);
-            _player.Inventory.AddIdimon(idimons[1]);
-            _player.Inventory.AddIdimon(idimons[1]);
+            // _player.Inventory.AddIdimon(new VH());
+            _player.Inventory.AddIdimon(new tiger());
+            // _player.Inventory.AddIdimon(new tiger());
+            // _player.Inventory.AddIdimon(new tiger());
+            // _player.Inventory.AddIdimon(new tiger());
             // _player.Inventory.AddIdimon(idimons[1]);
+            _player.Inventory.Idimons[0].LevelUp();
+            _player.Inventory.Idimons[0].LevelUp();
+            // _player.Inventory.ChangeIdimonPosition(_player.Inventory.Idimons[0], _player.Inventory.Idimons[3]);
 
             _gameMenu = new GameMenu(_player, _window);
 

@@ -30,8 +30,11 @@ namespace Idimon
         private Action _currentAction;
         private string _type;
 
+        private List<Items> _items;
+
         private int _selectedIdimonIndex;
         private int _selectedSkillIndex;
+        private int _selectedItemIndex;
 
         public BattleScreen(Window window, List<Idimons> player, List<Idimons> opponents, Inventory inventory, GameScreen preGameScreen) : base(window)
         {
@@ -57,6 +60,7 @@ namespace Idimon
 
             _selectedSkillIndex = 0;
             _selectedIdimonIndex = 0;
+            _selectedItemIndex = 0;
         }
 
         public void ExitBattle()
@@ -79,6 +83,7 @@ namespace Idimon
                 case Action.Items:
                     // Equipment logic
                     _type = "Items";
+                    _items = _inventory.GetAllItems("Items");
                     break;
                 case Action.Run:
                     // Run logic
@@ -90,7 +95,6 @@ namespace Idimon
         public override void Update()
         {
             // throw new NotImplementedException();
-            // Console.WriteLine(_player[0].Skills[0].Damage);
             // ExecuteTurn();
         }
         
@@ -180,6 +184,13 @@ namespace Idimon
                 }
             }
 
+            if(_type == "Items")
+            {
+                // Draw items
+
+                _inventory.DisplayInventory(_window, 260, 525, 370, "Items");
+            }
+
             _window.Refresh(60);
         }
 
@@ -235,6 +246,13 @@ namespace Idimon
                 }
                 return;
             }
+
+            if (_type == "Items")
+            {
+                _inventory.Navigate("Items");
+                return;
+            }
+
             _actionButtons[_selectedIndex].IsSelected = false;
 
             if (key == KeyCode.DownKey)
@@ -248,8 +266,6 @@ namespace Idimon
 
             _actionButtons[_selectedIndex].IsSelected = true;
             _currentAction = (Action)_selectedIndex;
-
-            
         }
 
         public override void HandleInput()
@@ -263,6 +279,39 @@ namespace Idimon
             if(_type == "Switch")
             {
                 HandleSwitchInput();
+                return;
+            }
+
+            if(_type == "Items")
+            {
+                if(SplashKit.KeyTyped(KeyCode.XKey))
+                {
+                    _type = "";
+                    SplashKit.Delay(100);
+                }
+                _inventory.HandleInput("Items");
+                if (SplashKit.KeyTyped(KeyCode.ZKey))
+                {
+                    if (_inventory.GetTotalItems() == 0) return;
+                    Items item = _inventory.SelectedItem;
+                    if(item.GetType() == typeof(Candy))
+                    {
+                        Candy candy = (Candy)item;
+                        candy.Use(_opponent[0], _inventory);
+                        if(candy.Result)
+                        {
+                            ExitBattle();
+                            SplashKit.Delay(100);
+                        }
+                        else
+                            ExecuteOpponentTurn(_player[_currentIdimonIndex], _opponent[0]);
+                    }
+                    else if(item.GetType() == typeof(Potion))
+                    {
+                        Potion potion = (Potion)item;
+                        potion.Use(_player[_currentIdimonIndex]);
+                    }
+                }
                 return;
             }
 
@@ -294,7 +343,6 @@ namespace Idimon
             }
             else if(SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
             {
-                Console.WriteLine(_selectedSkillIndex);
                 ExecuteTurn(_selectedSkillIndex);
                 _currentTurn = Turn.Opponent;
                 _type = "";
@@ -320,7 +368,6 @@ namespace Idimon
             }
             else if(SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
             {
-                Console.WriteLine(_selectedIdimonIndex);
                 SwitchPlayerIdimon(_selectedIdimonIndex);
                 _currentTurn = Turn.Opponent;
                 _type = "";
@@ -347,14 +394,25 @@ namespace Idimon
                 if (opponentIdimon.IsFainted())
                 {
                     opponentIdimon.Faint();
+                    playerIdimon.GainExperience(opponentIdimon.Level * 10);
                     ExitBattle();
+                    return;
                     // Logic for winning the battle
                 }
                 ExecuteOpponentTurn(playerIdimon, opponentIdimon);
                 if (playerIdimon.IsFainted())
                 {
                     playerIdimon.Faint();
-                    SwitchPlayerIdimon(_currentIdimonIndex + 1);
+                    foreach (var idimon in _player)
+                    {
+                        if (!idimon.IsFainted())
+                        {
+                            _type = "Switch";
+                            return;
+                        }
+                    }
+                    ExitBattle();
+                    return;
                     // Logic to switch Idimons
                 }
             }
@@ -364,7 +422,15 @@ namespace Idimon
                 if (playerIdimon.IsFainted())
                 {
                     playerIdimon.Faint();
-                    _type = "Switch";
+                    foreach (var idimon in _player)
+                    {
+                        if (!idimon.IsFainted())
+                        {
+                            _type = "Switch";
+                            return;
+                        }
+                    }
+                    ExitBattle();
                     return;
                     // SwitchPlayerIdimon(_currentIdimonIndex + 1);
                     // Logic to switch Idimons
@@ -373,7 +439,9 @@ namespace Idimon
                 if (opponentIdimon.IsFainted())
                 {
                     opponentIdimon.Faint();
+                    playerIdimon.GainExperience(opponentIdimon.Level * 10);
                     ExitBattle();
+                    return;
                     // Logic for winning the battle
                 }
             }

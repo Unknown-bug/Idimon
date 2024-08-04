@@ -129,6 +129,39 @@ namespace Idimon
             }
         }
 
+        public void DisplayInventory(Window window, double startX, double startY, double x_spacing, string type)
+        {
+            double x = startX;
+            double y = startY;
+
+            double X_SPACING = x_spacing;
+            double Y_SPACING = 50;
+
+            List<Items> items = GetAllItems(type);
+            int i = 0;
+
+            foreach (Items item in items)
+            {
+                i += 1;
+                item.DrawNoDescription(window, x, y);
+                if (i % 2 != 0)
+                {
+                    x += X_SPACING;
+                }
+                else
+                {
+                    x = startX;
+                    y += Y_SPACING;
+                }
+            }
+
+            // Highlight the selected item
+            if (items.Count > 0)
+            {
+                items[_selectedIndex].IsSelected = true;
+            }
+        }
+
         // Navigate through the items in the inventory
         public void Navigate(string type)
         {
@@ -149,26 +182,22 @@ namespace Idimon
             else if (SplashKit.KeyTyped(KeyCode.DownKey))
             {
                 items[_selectedIndex].IsSelected = false;
-                if(_items.Count % 2 != 0 && _selectedIndex == _items.Count - 1)
+                if(items.Count %2 != 0 && _selectedIndex == items.Count - 1)
                 {
-                    _selectedIndex = (_selectedIndex + 1) % items.Count;
+                    _selectedIndex = 0;
+                    return;
                 }
-                else
-                {
-                    _selectedIndex = (_selectedIndex + 2) % items.Count;
-                }
+                _selectedIndex = (_selectedIndex + 2 + items.Count) % items.Count;
             }
             else if (SplashKit.KeyTyped(KeyCode.UpKey))
             {
                 items[_selectedIndex].IsSelected = false;
-                if(_items.Count % 2 != 0 && _selectedIndex == _items.Count - 1)
+                if(items.Count %2 != 0 && (_selectedIndex == 0 || _selectedIndex == 1))
                 {
-                    _selectedIndex = (_selectedIndex - 1 + items.Count) % items.Count;
+                    _selectedIndex = items.Count - 1;
+                    return;
                 }
-                else
-                {
-                    _selectedIndex = (_selectedIndex - 2 + items.Count) % items.Count;
-                }
+                _selectedIndex = (_selectedIndex - 2 + items.Count) % items.Count;
             }
         }
 
@@ -194,6 +223,15 @@ namespace Idimon
             return type;
         }
 
+        public void ChangeIdimonPosition(Idimons currentIdimon, Idimons newIdimon)
+        {
+            int currentIndex = _idimons.IndexOf(currentIdimon);
+            int newIndex = _idimons.IndexOf(newIdimon);
+
+            _idimons[currentIndex] = newIdimon;
+            _idimons[newIndex] = currentIdimon;
+        }
+
         // Get the total number of items
         public int GetTotalItems()
         {
@@ -203,6 +241,11 @@ namespace Idimon
         public List<Idimons> Idimons
         {
             get { return _idimons; }
+        }
+
+        public Items SelectedItem
+        {
+            get { return GetAllItems("Items")[_selectedIndex]; }
         }
     }
 }
