@@ -11,5 +11,16 @@ namespace Idimon
             Skills.Add(new Skills("Thunderbolt", 5, 25, "A powerful electric attack."));
             Skills.Add(new Skills("Iron Tail", 10, 20, "A hard tail attack."));
         }
+
+        public override bool CanEvolve => this.Level >= 5;
+        
+        public override Idimons Evolve()
+        {
+            if (CanEvolve)
+            {
+                return new MultilevelSeller(this.Level, this.MaxHP, this.Attack, this.Defense, this.Speed);
+            }
+            return this;
+        }
     }
 }

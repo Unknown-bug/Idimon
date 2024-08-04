@@ -220,6 +220,42 @@ namespace Idimon
                 return "";
             }
             Navigate(type);
+            if (SplashKit.KeyTyped(KeyCode.ZKey))
+            {
+                Items item = items[_selectedIndex];
+                if(item.GetType() == typeof(Potion))
+                {
+                    Potion potion = (Potion)item;
+                    potion.Use(_idimons[0]);
+                }
+                else if(item.GetType() == typeof(Dope))
+                {
+                    Dope dope = (Dope)item;
+                    dope.Use(_idimons[0]);
+                }
+            }
+            return type;
+        }
+
+        public string HandleInput(string type, BattleScreen battleScreen)
+        {
+            List<Items> items = GetAllItems(type);
+            if (SplashKit.KeyTyped(KeyCode.XKey))
+            {
+                if (items.Count == 0) 
+                {
+                    Toggle();
+                    SplashKit.Delay(100);
+                    return "";
+                }
+                items[_selectedIndex].IsSelected = false;
+
+                _selectedIndex = 0;
+                Toggle();
+                SplashKit.Delay(100);
+                return "";
+            }
+            Navigate(type);
             return type;
         }
 

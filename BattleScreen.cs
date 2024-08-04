@@ -5,13 +5,13 @@ namespace Idimon
 {
     public class BattleScreen : Screens
     {
+        public bool InBattle { get; private set; }
         List<Idimons> _player;
         List<Idimons> _opponent;
         Inventory _inventory;
         Window _window;
         GameScreen _preGameScreen;
         private int _currentIdimonIndex, _selectedIndex;
-        Bitmap _background;
         List<MenuItem> _actionButtons;
         private enum Action
         {
@@ -38,12 +38,12 @@ namespace Idimon
 
         public BattleScreen(Window window, List<Idimons> player, List<Idimons> opponents, Inventory inventory, GameScreen preGameScreen) : base(window)
         {
+            InBattle = true;
             _window = window;
             _player = player;
             _opponent = opponents;
             _inventory = inventory;
             _preGameScreen = preGameScreen;
-            _background = new Bitmap("battle", "img\\CombatBackground.jpg");
             _currentIdimonIndex = 0;
             _selectedIndex = 0;
             _currentAction = (Action)0;
@@ -66,6 +66,7 @@ namespace Idimon
         public void ExitBattle()
         {
             Game.CurrentScreen = _preGameScreen;
+            InBattle = false;
         }
 
         public void Select()
@@ -289,7 +290,7 @@ namespace Idimon
                     _type = "";
                     SplashKit.Delay(100);
                 }
-                _inventory.HandleInput("Items");
+                _inventory.HandleInput("Items", this);
                 if (SplashKit.KeyTyped(KeyCode.ZKey))
                 {
                     if (_inventory.GetTotalItems() == 0) return;
@@ -310,6 +311,11 @@ namespace Idimon
                     {
                         Potion potion = (Potion)item;
                         potion.Use(_player[_currentIdimonIndex]);
+                    }
+                    else if(item.GetType() == typeof(Dope))
+                    {
+                        Dope dope = (Dope)item;
+                        dope.Use(_player[_currentIdimonIndex]);
                     }
                 }
                 return;

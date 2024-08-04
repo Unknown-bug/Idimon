@@ -11,5 +11,10 @@ namespace Idimon
             Skills.Add(new Skills("Thunderbolt", 5, 25, "A powerful electric attack."));
             Skills.Add(new Skills("Iron Tail", 10, 20, "A hard tail attack."));
         }
+        public override bool CanEvolve => false;
+        public override Idimons Evolve()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
