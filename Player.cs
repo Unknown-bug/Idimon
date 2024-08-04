@@ -57,15 +57,6 @@ namespace Idimon
             }
             if(SplashKit.KeyTyped(KeyCode.ZKey))
             {
-                Console.WriteLine((int)(_position.X + 32) / 64 + (int)1 + " " + (int)((int)(_position.Y + 32) / 64 + 1));
-                // if(_currentDirection == "up")
-                //     _map.HandleEnvent((int)(_position.X + 32) / 64 , (int)(_position.Y + 32) / 64 - 1, Inventory.Idimons, Inventory);
-                // else if(_currentDirection == "down")
-                //     _map.HandleEnvent((int)(_position.X + 32) / 64 , (int)(_position.Y + 32) / 64 + 1, Inventory.Idimons, Inventory);
-                // else if(_currentDirection == "left")
-                //     _map.HandleEnvent((int)(_position.X + 32) / 64 - 1, (int)(_position.Y + 32) / 64 , Inventory.Idimons, Inventory);
-                // else if(_currentDirection == "right")
-                //     _map.HandleEnvent((int)(_position.X + 32) / 64 + 1, (int)(_position.Y + 32) / 64, Inventory.Idimons, Inventory);
                 int newX = 0, newY = 0;
                 if(_currentDirection == "up")
                 {
@@ -87,7 +78,6 @@ namespace Idimon
                     newX = (int)(_position.X + 32) / 64 + 2;
                     newY = (int)(_position.Y + 32) / 64 + 1;
                 }
-                Console.WriteLine(newX + " " + newY + " " + _currentDirection);
                 _map.HandleEnvent(newX, newY, Inventory.Idimons, Inventory);
                 // _map.HandleEnvent((int)(_position.X + 32) / 64 + 1, (int)(_position.Y + 32) / 64 + 1, Inventory.Idimons, Inventory);
             }

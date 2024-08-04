@@ -47,13 +47,10 @@ namespace Idimon
         };
         private Dictionary<string, Items> _items = new Dictionary<string, Items>
         {
-            // { "Candy", new Items("Candy", "Use to catch Idimon", "img\\items\\Candy2.png", 1, true, true, "Items") },
-            // { "Master Candy", new Items("Master Candy", "Use to catch Idimon", "img\\items\\candy1.png", 1, true, true, "Items") }, 
-            // { "Potion", new Items("Potion", "Heal 50 HP", "img\\items\\background.png", 1, true, true, "Items") },
-            // { "EXP Sharing", new Items("EXP Sharing", "Share EXP with all party members", "img\\items\\background.png", 1, true, true, "Key Items") }
             { "Candy", new Candy("Candy", "Use to catch Idimon", "img\\items\\Candy2.png", 0.5) },
             { "Master Candy", new Candy("Master Candy", "Use to catch Idimon", "img\\items\\candy1.png", 1) }, 
             { "Potion", new Potion("Potion", "Heal 50 HP", "img\\items\\background.png", 50) },
+            { "Dope", new Dope("Dope", "Level up Idimon", "img\\items\\dope.png") }
             // { "EXP Sharing", new Items("EXP Sharing", "Share EXP with all party members", "img\\items\\background.png", 1, true, true, "Key Items") }
         };
 
@@ -83,17 +80,14 @@ namespace Idimon
             _player.Inventory.AddItem(_items["Candy"]);
             _player.Inventory.AddItem(_items["Master Candy"]);
             _player.Inventory.AddItem(_items["Potion"]);
+            _player.Inventory.AddItem(_items["Dope"]);
             // _player.Inventory.AddItem(_items["EXP Sharing"]);
 
             // _player.Inventory.AddIdimon(new VH());
+            _player.Inventory.AddIdimon(new Student());
             _player.Inventory.AddIdimon(new tiger());
-            // _player.Inventory.AddIdimon(new tiger());
-            // _player.Inventory.AddIdimon(new tiger());
-            // _player.Inventory.AddIdimon(new tiger());
-            // _player.Inventory.AddIdimon(idimons[1]);
             _player.Inventory.Idimons[0].LevelUp();
             _player.Inventory.Idimons[0].LevelUp();
-            // _player.Inventory.ChangeIdimonPosition(_player.Inventory.Idimons[0], _player.Inventory.Idimons[3]);
 
             _gameMenu = new GameMenu(_player, _window);
 
@@ -117,6 +111,14 @@ namespace Idimon
             _window.Clear(Color.White);
             _ObjectMap.Draw(_player);
             _player.Draw();
+            for (int i=0; i<_player.Inventory.Idimons.Count; i++)
+            {
+                if (_player.Inventory.Idimons[i].CanEvolve)
+                {
+                    Console.WriteLine("Evolve");
+                    _player.Inventory.Idimons[i] = _player.Inventory.Idimons[i].Evolve();
+                }
+            }
             _gameMenu.Draw();
             _window.Refresh(60);
         }

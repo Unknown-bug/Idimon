@@ -73,11 +73,11 @@ namespace Idimon
                 SplashKit.LoadFont("Arial", "arial.ttf");
                 SplashKit.DrawText(_idimon.Name, Color.White, "Arial", 30, 300 + 5, 200);
 
-                SplashKit.DrawText("Lv " + _idimon.Level, Color.White, "Arial", 30, 360, 130 + 14 );
+                SplashKit.DrawText("Lv " + _idimon.Level, Color.White, "Arial", 30, 370, 130 + 14 );
                 SplashKit.DrawText(_idimon.ExperienceToNextLevel - _idimon.EXP + " til next level " , Color.White, "Arial", 20, 490, 130 + 24);
-                SplashKit.DrawRectangle(Color.RGBAColor(255, 255, 255, 255), 360, 130 + 64 - 20, 300, 20);
+                SplashKit.DrawRectangle(Color.RGBAColor(255, 255, 255, 255), 370, 130 + 64 - 20, 300, 20);
                 if(_idimon.EXP != 0)
-                    SplashKit.FillRectangle(Color.Blue, 360 + 1, 130 + 64 - 20 + 1, (300 - 2) * _idimon.EXP / _idimon.ExperienceToNextLevel , 20 - 2);
+                    SplashKit.FillRectangle(Color.Blue, 370 + 1, 130 + 64 - 20 + 1, (300 - 2) * _idimon.EXP / _idimon.ExperienceToNextLevel , 20 - 2);
 
                 SplashKit.DrawText("HP: " + _idimon.CurrentHP + "/" + _idimon.MaxHP, Color.White, "Arial", 20, 300 + 5, 244);
                 SplashKit.DrawText("Attack: " + _idimon.Attack, Color.White, "Arial", 20, 300 + 5, 274);

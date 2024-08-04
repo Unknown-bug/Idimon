@@ -24,7 +24,7 @@ namespace Idimon
         public bool IsSelected { get; set; }
         public string Rank { get; set; }
 
-        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed, string imagePaths, string rank)
+        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed, string imagePaths, string rank )
         {
             Name = name;
             Level = level;
@@ -38,6 +38,7 @@ namespace Idimon
             Image = SplashKit.LoadBitmap(name, imagePaths);
             ExperienceToNextLevel = CalculateExperienceToNextLevel();
             Rank = rank;
+            // CanEvolve = canEvolve;
         }
         
         private int CalculateExperienceToNextLevel()
@@ -63,8 +64,15 @@ namespace Idimon
             if (EXP >= ExperienceToNextLevel)
             {
                 LevelUp();
+                // if (CanEvolve)
+                // {
+                //     Evolve();
+                // }
             }
         }
+
+        public abstract bool CanEvolve { get; }
+        public abstract Idimons Evolve();        
 
         public void LevelUp()
         {
@@ -119,11 +127,6 @@ namespace Idimon
             {
                 Console.WriteLine(Skills[moveIndex].Damage);
                 Skills[moveIndex].Use(this, opponent);
-
-                // SplashKit.FillRectangle(Color.White, 0, SplashKit.ScreenHeight() / 3 * 2, SplashKit.ScreenWidth(), 2);
-                // SplashKit.FillRectangle(Color.White, SplashKit.ScreenWidth() / 4, SplashKit.ScreenHeight() / 3 * 2, 2, SplashKit.ScreenHeight());
-                
-                
             }
             else
             {
