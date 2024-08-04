@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SplashKitSDK;
 
 namespace Idimon
 {
@@ -13,15 +14,17 @@ namespace Idimon
         public int Level { get; protected set; }
         public int EXP { get; protected set; }
         public int MaxHP { get; protected set; }
-        public int CurrentHP { get; protected set; }
+        public int CurrentHP { get; set; }
         public int Attack { get; protected set; }
         public int Defense { get; protected set; }
         public int Speed { get; protected set; }
-        public string Image { get; protected set; }
+        public Bitmap Image { get; protected set; }
         public int ExperienceToNextLevel { get; protected set; }
         public List<Skills> Skills { get; protected set; }
+        public bool IsSelected { get; set; }
+        public string Rank { get; set; }
 
-        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed)
+        public Idimons(string name, int level, int maxHP, int attack, int defense, int speed, string imagePaths, string rank )
         {
             Name = name;
             Level = level;
@@ -32,7 +35,10 @@ namespace Idimon
             Defense = defense;
             Speed = speed;
             Skills = new List<Skills>();
+            Image = SplashKit.LoadBitmap(name, imagePaths);
             ExperienceToNextLevel = CalculateExperienceToNextLevel();
+            Rank = rank;
+            // CanEvolve = canEvolve;
         }
         
         private int CalculateExperienceToNextLevel()
@@ -58,10 +64,17 @@ namespace Idimon
             if (EXP >= ExperienceToNextLevel)
             {
                 LevelUp();
+                // if (CanEvolve)
+                // {
+                //     Evolve();
+                // }
             }
         }
 
-        protected void LevelUp()
+        public abstract bool CanEvolve { get; }
+        public abstract Idimons Evolve();        
+
+        public void LevelUp()
         {
             Level++;
             EXP = 0;
@@ -94,6 +107,42 @@ namespace Idimon
             {
                 CurrentHP = MaxHP;
             }
+        }
+
+        public void Draw(double x, double y)
+        {
+            SplashKit.DrawBitmap(Image, x, y);
+        }
+
+        public void DrawHPBar(double x, double y, double width, double height)
+        {
+            SplashKit.DrawRectangle(Color.White, x, y, width, height);
+            if(CurrentHP > 0)
+                SplashKit.FillRectangle(Color.Red, x + 1, y + 1, width * CurrentHP / MaxHP - 2 , height - 2);
+        }
+
+        public void Attacking(Idimons opponent, int moveIndex)
+        {
+            if (moveIndex >= 0 && moveIndex < Skills.Count)
+            {
+                Console.WriteLine(Skills[moveIndex].Damage);
+                Skills[moveIndex].Use(this, opponent);
+            }
+            else
+            {
+                Console.WriteLine($"{Name} cannot use this move.");
+            }
+        }
+
+        public bool IsFasterThan(Idimons opponent)
+        {
+            return this.Speed > opponent.Speed;
+        }
+
+        public void Faint()
+        {
+            Console.WriteLine($"{Name} has fainted!");
+            // Additional logic for fainting
         }
     }
 }

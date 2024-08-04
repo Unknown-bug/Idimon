@@ -3,7 +3,7 @@ using SplashKitSDK;
 
 namespace Idimon
 {
-    public class Player : Character
+    public class Player : Character, IHaveInventory
     {
         private const double Speed = 200; // Pixels per second
         public Vector2D MoveVector { get; private set; }
@@ -13,6 +13,7 @@ namespace Idimon
         private const double MoveDuration = 0.2;
         private Map _map; // Reference to the Map instance
         string path = "img\\PlayerIMG\\";
+        private Inventory _inventory;
 
         public Player(string name, List<string> imagePaths, Point2D position, Window window, Map map) : base(name, imagePaths, position, window)
         {
@@ -22,6 +23,7 @@ namespace Idimon
             _moveQueue = new Queue<Point2D>();
             _moveTimer = 0;
             _map = map; // Initialize the Map reference
+            _inventory = new Inventory();
         }
 
         public override void LoadImages()
@@ -53,7 +55,35 @@ namespace Idimon
             {
                 UpdateAnimation(deltaTime);
             }
+            if(SplashKit.KeyTyped(KeyCode.ZKey))
+            {
+                int newX = 0, newY = 0;
+                if(_currentDirection == "up")
+                {
+                    newX = (int)(_position.X + 32) / 64 + 1;
+                    newY = (int)(_position.Y + 32) / 64 ;
+                }
+                else if(_currentDirection == "down")
+                {
+                    newX = (int)(_position.X + 32) / 64 + 1;
+                    newY = (int)(_position.Y + 32) / 64 + 2;
+                }
+                else if(_currentDirection == "left")
+                {
+                    newX = (int)(_position.X + 32) / 64 ;
+                    newY = (int)(_position.Y + 32) / 64 + 1;
+                }
+                else if(_currentDirection == "right")
+                {
+                    newX = (int)(_position.X + 32) / 64 + 2;
+                    newY = (int)(_position.Y + 32) / 64 + 1;
+                }
+                _map.HandleEnvent(newX, newY, Inventory.Idimons, Inventory);
+                // _map.HandleEnvent((int)(_position.X + 32) / 64 + 1, (int)(_position.Y + 32) / 64 + 1, Inventory.Idimons, Inventory);
+            }
         }
+
+        public Inventory Inventory => _inventory;
 
         private void UpdateMovement(double deltaTime)
         {
@@ -74,7 +104,7 @@ namespace Idimon
             double dx = 0, dy = 0;
             bool isMoving = false;
             Point2D newPosition = _position;
-            int newX = 0, newY = 0;
+            int newX = 0, newY = 0, preX, preY;
 
             if (SplashKit.KeyDown(KeyCode.UpKey))
             {
@@ -124,15 +154,23 @@ namespace Idimon
                 newdx = 0;
                 newdy = -32;
             }
+
+            preX = (int)(_position.X + 32) / 64 + 1;
+            preY = (int)(_position.Y + 32) / 64 + 1;
+            int tnewX = (int)(newPosition.X + 32) / 64 + 1, tnewY = (int)(newPosition.Y + 32) / 64 + 1;
+            
             newX = (int)(newPosition.X + 32 + newdx) / 64 + 1;
             newY = (int)(newPosition.Y + 32 + newdy) / 64 + 1;
-            // Console.WriteLine(newX + " " + newY);
 
             MoveVector = new Vector2D() { X = dx, Y = dy };
 
             if (isMoving && _map.CanMoveTo((int)newY, (int)newX))
             {
                 Move(dx, dy);
+                if(tnewX != preX || tnewY != preY)
+                {
+                    _map.HandleEnvent(newX, newY, Inventory.Idimons, Inventory);
+                }
                 UpdateAnimation(deltaTime); // Update the animation frame only when moving
             }
             else if (!isMoving)
