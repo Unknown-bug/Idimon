@@ -26,3 +26,4 @@ D:\workspace\COS20007\COS20007-working\CustomProgram\Idimon\bin\Debug\net8.0\Idi
 D:\workspace\COS20007\COS20007-working\CustomProgram\Idimon\bin\Debug\net8.0\Idimon.pdb
 D:\workspace\COS20007\COS20007-working\CustomProgram\Idimon\obj\Debug\net8.0\Idimon.genruntimeconfig.cache
 D:\workspace\COS20007\COS20007-working\CustomProgram\Idimon\obj\Debug\net8.0\ref\Idimon.dll
+D:\workspace\COS20007\COS20007-working\CustomProgram\Idimon\obj\Debug\net8.0\Idimon.sourcelink.json
