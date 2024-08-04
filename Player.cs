@@ -172,9 +172,6 @@ namespace Idimon
             newX = (int)(newPosition.X + 32 + newdx) / 64 + 1;
             newY = (int)(newPosition.Y + 32 + newdy) / 64 + 1;
 
-            // Console.WriteLine(preX + " " + preY + "p");
-            // Console.WriteLine(newX + " " + newY);
-
             MoveVector = new Vector2D() { X = dx, Y = dy };
 
             if (isMoving && _map.CanMoveTo((int)newY, (int)newX))

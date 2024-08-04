@@ -10,12 +10,13 @@ namespace Idimon
         {
             Idimon,
             Inventory,
+            Team,
             Save,
             Load,
             Setting
         }
 
-        private int _selectedIndex, _idimonIndex;
+        private int _selectedIndex, _idimonIndex, _newIdimonIndex;
         private MenuState _currentMenu;
         private InventoryMenu _inventoryMenu;
         private IdimonMenu _idimonMenu;
@@ -27,13 +28,15 @@ namespace Idimon
             {
                 new MenuItem("Idimon", 50, 60),
                 new MenuItem("Inventory", 50, 100),
-                new MenuItem("Save", 50, 140),
-                new MenuItem("Load", 50, 180),
-                new MenuItem("Setting", 50, 220)
+                new MenuItem("Team", 50, 140),
+                new MenuItem("Save", 50, 180),
+                new MenuItem("Load", 50, 220),
+                new MenuItem("Setting", 50, 260)
             };
             _player = player;
             _selectedIndex = 0;
             _idimonIndex = 99;
+            _newIdimonIndex = 99;
             _menuItems[_selectedIndex].IsSelected = true;
             _currentMenu = (MenuState)_selectedIndex;
             _inventoryMenu = new InventoryMenu(_player, _window, "Items");
@@ -63,7 +66,36 @@ namespace Idimon
                 }
 
                 _player.Inventory.Idimons[_idimonIndex].IsSelected = true;
-                Console.WriteLine(_idimonIndex);
+                return;
+            }
+
+            if (_inventoryMenu.SelectedMenu == "Team")
+            {
+                if(_player.Inventory.Idimons.Count == 0)
+                {
+                    return;
+                }
+
+                _player.Inventory.Idimons[_idimonIndex].IsSelected = false;
+
+                if (key == KeyCode.DownKey)
+                {
+                    _idimonIndex = (_idimonIndex + 1) % _player.Inventory.Idimons.Count;
+                    if(_idimonIndex == _newIdimonIndex)
+                    {
+                        _idimonIndex = (_idimonIndex + 1) % _player.Inventory.Idimons.Count;
+                    }
+                }
+                else if (key == KeyCode.UpKey)
+                {
+                    _idimonIndex = (_idimonIndex - 1 + _player.Inventory.Idimons.Count) % _player.Inventory.Idimons.Count;
+                    if(_idimonIndex == _newIdimonIndex)
+                    {
+                        _idimonIndex = (_idimonIndex - 1 + _player.Inventory.Idimons.Count) % _player.Inventory.Idimons.Count;
+                    }
+                }
+
+                _player.Inventory.Idimons[_idimonIndex].IsSelected = true;
                 return;
             }
 
@@ -99,6 +131,12 @@ namespace Idimon
                     _inventoryMenu.SelectedMenu = "Items";
                     _inventoryMenu.Open();
                     // Open();
+                    break;
+                case MenuState.Team:
+                    // Team logic
+                    _idimonIndex = 0;
+                    
+                    _inventoryMenu.SelectedMenu = "Team";
                     break;
                 case MenuState.Save:
                     // Save game logic
@@ -153,9 +191,16 @@ namespace Idimon
 
                 foreach (var idimon in _player.Inventory.Idimons)
                 {    
-                    if (i == _idimonIndex)
+                    if (i == _idimonIndex )
                     {
                         SplashKit.FillRectangle(Color.RGBAColor(255, 255, 0, 150), x - 5, y - 5, SplashKit.ScreenWidth() - x , 80);
+                    }
+                    if( _newIdimonIndex != 99 && i == _newIdimonIndex)
+                    {
+                        if (_player.Inventory.Idimons[_newIdimonIndex].IsSelected)
+                        {
+                            SplashKit.FillRectangle(Color.RGBAColor(255, 255, 0, 150), x - 5, y - 5, SplashKit.ScreenWidth() - x , 80);
+                        }
                     }
 
                     idimon.Draw(x, y);
@@ -164,9 +209,7 @@ namespace Idimon
                     SplashKit.DrawText(idimon.Name, Color.White, "Arial", 30, x + 150, y);
                     SplashKit.DrawText($"Level: {idimon.Level}", Color.White, "Arial", 30, SplashKit.ScreenWidth() - 170, y);
                     idimon.DrawHPBar(x + 150, y + 44, SplashKit.ScreenWidth() - x - 170, 20);
-                    // SplashKit.DrawRectangle(Color.White, x + 150, y + 44, SplashKit.ScreenWidth() - x - 170, 20);
-                    // SplashKit.FillRectangle(Color.Red, x + 150, y + 44, (SplashKit.ScreenWidth() - x - 170) * idimon.CurrentHP / idimon.MaxHP, 20);
-
+            
                     i++;
                     y += SplashKit.ScreenHeight() / 6;
                 }
@@ -199,17 +242,10 @@ namespace Idimon
                 }
                 else if (SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
                 {
-                    // GameScreen previousScreen = (GameScreen)Game.CurrentScreen;
-                    Console.WriteLine(_idimonIndex);
                     _idimonMenu = new IdimonMenu(_player.Inventory.Idimons[_idimonIndex], _window, "Status");
                     _idimonMenu.Open();
                 }
                 return;
-            }
-
-            if (SplashKit.KeyTyped(KeyCode.XKey))
-            {
-                Toggle();
             }
             else if (SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
             {
@@ -217,7 +253,46 @@ namespace Idimon
             }
             else if (SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
             {
+                if(_currentMenu == MenuState.Team)
+                {
+                    
+                    if(_newIdimonIndex == 99)
+                    {
+                        _newIdimonIndex = _idimonIndex;
+                        if(_newIdimonIndex != 99)
+                            _player.Inventory.Idimons[_idimonIndex].IsSelected = true;
+                    }
+                    else
+                    {
+                        _player.Inventory.ChangeIdimonPosition(_player.Inventory.Idimons[_idimonIndex], _player.Inventory.Idimons[_newIdimonIndex]);
+                        _player.Inventory.Idimons[_newIdimonIndex].IsSelected = false;
+                        _newIdimonIndex = 99;
+                    }
+                    Select();
+                    return;
+                }
                 Select();
+            }
+            if(_inventoryMenu.SelectedMenu == "Team")
+            {
+                if(SplashKit.KeyTyped(KeyCode.XKey))
+                {
+                    if(_newIdimonIndex != 99)
+                    {
+                        _player.Inventory.Idimons[_newIdimonIndex].IsSelected = false;
+                        _newIdimonIndex = 99;
+                        SplashKit.Delay(100);
+                        return;
+                    }
+                    _inventoryMenu.SelectedMenu = "";
+                    _idimonIndex = 99;
+                    SplashKit.Delay(100);
+                }
+                return;
+            }
+            if (SplashKit.KeyTyped(KeyCode.XKey))
+            {
+                Toggle();
             }
         }
 

@@ -24,23 +24,6 @@ namespace Idimon
             opponent.TakeDamage(damageDealt);
 
             user.Draw(100, 100);
-            
-            // SplashKitSDK.Timer _timer;
-            // _timer = new SplashKitSDK.Timer("Timer");
-            // _timer.Start();
-            // while (_timer.Ticks < 1000)
-            // {
-            //     Console.WriteLine($"{user.Name} used {Name} and dealt {damageDealt} damage to {opponent.Name}.");
-            //     SplashKit.FillRectangle(Color.Black, 0, 0, SplashKit.ScreenWidth(), SplashKit.ScreenHeight());
-            //     // SplashKit.FillRectangle(Color.Black, SplashKit.ScreenWidth() / 4, SplashKit.ScreenHeight() / 3 * 2, SplashKit.ScreenWidth() - SplashKit.ScreenWidth() / 4 - 2, SplashKit.ScreenHeight() - SplashKit.ScreenHeight() / 3 * 2 - 2);
-            //     SplashKit.DrawText($"{Name} used {Name}!", Color.White, 440, 650);
-            // }
-            // _timer.Stop();
-            // _timer.Reset();
-
-
-            
-            // SplashKit.Delay(2000);
         }
 
         public void Display()

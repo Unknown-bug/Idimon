@@ -140,7 +140,6 @@ namespace Idimon
             }
             else if (SplashKit.KeyTyped(KeyCode.RightKey) || SplashKit.KeyTyped(KeyCode.LeftKey))
             {
-                // Console.WriteLine("Navigate");
                 Navigate(SplashKit.KeyTyped(KeyCode.RightKey) ? KeyCode.RightKey : KeyCode.LeftKey);
             }
             else if (SplashKit.KeyTyped(KeyCode.ReturnKey) || SplashKit.KeyTyped(KeyCode.ZKey))
@@ -148,6 +147,11 @@ namespace Idimon
                 Select();
                 _player.Inventory.Toggle();
             }
+        }
+
+        public virtual void Use()
+        {
+
         }
 
         public override void Open()

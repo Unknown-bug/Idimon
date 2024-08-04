@@ -66,7 +66,7 @@ namespace Idimon
             }
         }
 
-        protected void LevelUp()
+        public void LevelUp()
         {
             Level++;
             EXP = 0;
@@ -109,7 +109,8 @@ namespace Idimon
         public void DrawHPBar(double x, double y, double width, double height)
         {
             SplashKit.DrawRectangle(Color.White, x, y, width, height);
-            SplashKit.FillRectangle(Color.Red, x + 1, y + 1, width * CurrentHP / MaxHP - 2 , height - 2);
+            if(CurrentHP > 0)
+                SplashKit.FillRectangle(Color.Red, x + 1, y + 1, width * CurrentHP / MaxHP - 2 , height - 2);
         }
 
         public void Attacking(Idimons opponent, int moveIndex)
