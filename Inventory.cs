@@ -4,13 +4,15 @@ using SplashKitSDK;
 
 namespace Idimon
 {
+    // The Inventory class manages the items and Idimons a player has.
     public class Inventory
     {
-        private Dictionary<string, Items> _items;
-        private List<Idimons> _idimons;
-        private int _selectedIndex;
-        private bool _visible;
+        private Dictionary<string, Items> _items; // Dictionary to store items by name
+        private List<Idimons> _idimons; // List to store Idimons
+        private int _selectedIndex; // Index of the currently selected item
+        private bool _visible; // Visibility status of the inventory
 
+        // Constructor to initialize the inventory
         public Inventory()
         {
             _items = new Dictionary<string, Items>();
@@ -19,18 +21,20 @@ namespace Idimon
             _visible = false;
         }
 
+        // Property to get or set the visibility of the inventory
         public bool Visible
         {
             get { return _visible; }
             set { _visible = value; }
         }
 
+        // Toggle the visibility of the inventory
         public void Toggle()
         {
             _visible = !_visible;
         }
 
-        // Add item to the inventory
+        // Add an item to the inventory
         public void AddItem(Items item)
         {
             if (_items.ContainsKey(item.Name))
@@ -43,16 +47,16 @@ namespace Idimon
             }
         }
 
-        // Add idimon to the inventory
+        // Add an Idimon to the inventory
         public void AddIdimon(Idimons idimon)
         {
-            if(_idimons.Count < 6)
+            if (_idimons.Count < 6)
             {
                 _idimons.Add(idimon);
             }
         }
 
-        // Remove one quantity of the item from the inventory
+        // Remove one quantity of an item from the inventory
         public void RemoveItem(string itemName)
         {
             if (_items.ContainsKey(itemName))
@@ -66,13 +70,14 @@ namespace Idimon
             }
         }
 
+        // Remove an Idimon from the inventory
         public void RemoveIdimon(Idimons idimon)
         {
             _idimons.Remove(idimon);
         }
 
-        // Find item by name
-        public Items FindItemByName(string name)
+        // Find an item by its name
+        public Items? FindItemByName(string name)
         {
             if (_items.ContainsKey(name))
             {
@@ -81,7 +86,7 @@ namespace Idimon
             return null;
         }
 
-        // Get the list of all items
+        // Get a list of all items of a specific type
         public List<Items> GetAllItems(string type)
         {
             List<Items> items = new List<Items>();
@@ -95,12 +100,11 @@ namespace Idimon
             return items;
         }
 
-        // Display the inventory
+        // Display the inventory on the screen
         public void DisplayInventory(Window window, double startX, double startY, string type)
         {
             double x = startX;
             double y = startY;
-
             double X_SPACING = 105 + SplashKit.ScreenWidth() / 3;
             double Y_SPACING = 50;
 
@@ -129,11 +133,11 @@ namespace Idimon
             }
         }
 
+        // Overloaded method to display the inventory with custom spacing
         public void DisplayInventory(Window window, double startX, double startY, double x_spacing, string type)
         {
             double x = startX;
             double y = startY;
-
             double X_SPACING = x_spacing;
             double Y_SPACING = 50;
 
@@ -168,7 +172,6 @@ namespace Idimon
             List<Items> items = GetAllItems(type);
             if (items.Count == 0) return;
 
-            // items[_selectedIndex].IsSelected = false;
             if (SplashKit.KeyTyped(KeyCode.RightKey))
             {
                 items[_selectedIndex].IsSelected = false;
@@ -182,7 +185,7 @@ namespace Idimon
             else if (SplashKit.KeyTyped(KeyCode.DownKey))
             {
                 items[_selectedIndex].IsSelected = false;
-                if(items.Count %2 != 0 && _selectedIndex == items.Count - 1)
+                if (items.Count % 2 != 0 && _selectedIndex == items.Count - 1)
                 {
                     _selectedIndex = 0;
                     return;
@@ -192,7 +195,7 @@ namespace Idimon
             else if (SplashKit.KeyTyped(KeyCode.UpKey))
             {
                 items[_selectedIndex].IsSelected = false;
-                if(items.Count %2 != 0 && (_selectedIndex == 0 || _selectedIndex == 1))
+                if (items.Count % 2 != 0 && (_selectedIndex == 0 || _selectedIndex == 1))
                 {
                     _selectedIndex = items.Count - 1;
                     return;
@@ -201,19 +204,19 @@ namespace Idimon
             }
         }
 
+        // Handle input for navigating and using items in the inventory
         public string HandleInput(string type)
         {
             List<Items> items = GetAllItems(type);
             if (SplashKit.KeyTyped(KeyCode.XKey))
             {
-                if (items.Count == 0) 
+                if (items.Count == 0)
                 {
                     Toggle();
                     SplashKit.Delay(100);
                     return "";
                 }
                 items[_selectedIndex].IsSelected = false;
-
                 _selectedIndex = 0;
                 Toggle();
                 SplashKit.Delay(100);
@@ -223,12 +226,12 @@ namespace Idimon
             if (SplashKit.KeyTyped(KeyCode.ZKey))
             {
                 Items item = items[_selectedIndex];
-                if(item.GetType() == typeof(Potion))
+                if (item.GetType() == typeof(Potion))
                 {
                     Potion potion = (Potion)item;
                     potion.Use(_idimons[0]);
                 }
-                else if(item.GetType() == typeof(Dope))
+                else if (item.GetType() == typeof(Dope))
                 {
                     Dope dope = (Dope)item;
                     dope.Use(_idimons[0]);
@@ -237,19 +240,19 @@ namespace Idimon
             return type;
         }
 
+        // Overloaded method to handle input with a BattleScreen parameter
         public string HandleInput(string type, BattleScreen battleScreen)
         {
             List<Items> items = GetAllItems(type);
             if (SplashKit.KeyTyped(KeyCode.XKey))
             {
-                if (items.Count == 0) 
+                if (items.Count == 0)
                 {
                     Toggle();
                     SplashKit.Delay(100);
                     return "";
                 }
                 items[_selectedIndex].IsSelected = false;
-
                 _selectedIndex = 0;
                 Toggle();
                 SplashKit.Delay(100);
@@ -259,6 +262,7 @@ namespace Idimon
             return type;
         }
 
+        // Change the position of two Idimons in the inventory
         public void ChangeIdimonPosition(Idimons currentIdimon, Idimons newIdimon)
         {
             int currentIndex = _idimons.IndexOf(currentIdimon);
@@ -268,17 +272,19 @@ namespace Idimon
             _idimons[newIndex] = currentIdimon;
         }
 
-        // Get the total number of items
+        // Get the total number of items in the inventory
         public int GetTotalItems()
         {
             return _items.Count;
         }
 
+        // Property to get the list of Idimons in the inventory
         public List<Idimons> Idimons
         {
             get { return _idimons; }
         }
 
+        // Property to get the currently selected item
         public Items SelectedItem
         {
             get { return GetAllItems("Items")[_selectedIndex]; }

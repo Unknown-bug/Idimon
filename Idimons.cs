@@ -71,7 +71,7 @@ namespace Idimon
             }
         }
 
-        public abstract bool CanEvolve { get; }
+        public virtual bool CanEvolve { get; }
         public abstract Idimons Evolve();        
 
         public void LevelUp()

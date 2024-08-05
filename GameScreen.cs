@@ -8,9 +8,9 @@ namespace Idimon
     {
         private GameMenu _gameMenu;
         private Player _player;
-        private Map _ObjectMap, _BackgroundMap;
+        private Map _Map;
         private SplashKitSDK.Timer _timer;
-        private char[,] ObjectmapData = {
+        private char[,] _objectmapData = {
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', 'x', 'x', 'x', 'x', 'x', 'x', '*', '*', '*', '*', '*', '*' },
@@ -25,7 +25,7 @@ namespace Idimon
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' }
             };
 
-        private char[,] BackgroudmapData = {
+        private char[,] _backgroudmapData = {
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
@@ -39,7 +39,7 @@ namespace Idimon
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' },
             { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*' }
         };
-        private Dictionary<char, Block> blockTypes = new Dictionary<char, Block>
+        private Dictionary<char, Block> _blockTypes = new Dictionary<char, Block>
         {
             { '*', new BackgroundBlocks("grass", "img/Grass.png", false) },
             { 'x', new BackgroundBlocks("Tall Grass", "img/TallGrass.png", false) },
@@ -74,16 +74,14 @@ namespace Idimon
 
         public GameScreen(Window window) : base(window)
         {
-            _ObjectMap = new Map(ObjectmapData, BackgroudmapData, blockTypes, _window);
+            _Map = new Map(_objectmapData, _backgroudmapData, _blockTypes, _window);
 
-            _player = new Player("Ash", _characterImages, new Point2D() { X = 400, Y = 300 }, _window, _ObjectMap);
+            _player = Player.GetInstance("Ash", _characterImages, new Point2D() { X = 400, Y = 300 }, _window, _Map);
             _player.Inventory.AddItem(_items["Candy"]);
             _player.Inventory.AddItem(_items["Master Candy"]);
             _player.Inventory.AddItem(_items["Potion"]);
             _player.Inventory.AddItem(_items["Dope"]);
-            // _player.Inventory.AddItem(_items["EXP Sharing"]);
 
-            // _player.Inventory.AddIdimon(new VH());
             _player.Inventory.AddIdimon(new Student());
             _player.Inventory.AddIdimon(new tiger());
             _player.Inventory.Idimons[0].LevelUp();
@@ -109,7 +107,7 @@ namespace Idimon
         public override void Draw()
         {
             _window.Clear(Color.White);
-            _ObjectMap.Draw(_player);
+            _Map.Draw(_player);
             _player.Draw();
             for (int i=0; i<_player.Inventory.Idimons.Count; i++)
             {

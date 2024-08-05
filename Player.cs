@@ -12,18 +12,33 @@ namespace Idimon
         private Window _window;
         private const double MoveDuration = 0.2;
         private Map _map; // Reference to the Map instance
-        string path = "img\\PlayerIMG\\";
         private Inventory _inventory;
+        public string Name { get; private set; }
 
-        public Player(string name, List<string> imagePaths, Point2D position, Window window, Map map) : base(name, imagePaths, position, window)
+        string path = "img\\PlayerIMG\\";
+
+        // Private static variable to hold the single instance of the class
+        private static Player _instance;
+
+        private Player(string name, List<string> imagePaths, Point2D position, Window window, Map map) : base(name, imagePaths, position, window)
         {
             LoadImages();
+            Name = name;
             _window = window;
             MoveVector = new Vector2D() { X = 0, Y = 0 };
             _moveQueue = new Queue<Point2D>();
             _moveTimer = 0;
             _map = map; // Initialize the Map reference
             _inventory = new Inventory();
+        }
+
+        public static Player GetInstance(string name, List<string> imagePaths, Point2D position, Window window, Map map)
+        {
+            if (_instance == null)
+            {
+                _instance = new Player(name, imagePaths, position, window, map);
+            }
+            return _instance;
         }
 
         public override void LoadImages()
