@@ -54,16 +54,6 @@ namespace Idimon
             // { "EXP Sharing", new Items("EXP Sharing", "Share EXP with all party members", "img\\items\\background.png", 1, true, true, "Key Items") }
         };
 
-        private List<Idimons> idimons = new List<Idimons>
-        {
-            new VH(),
-            new tiger(),
-            new Student(),
-            new Idiot(),
-            new Nigga(),
-            new MultilevelSeller()
-        };
-
         private List<string> _characterImages = new List<string>
         {
             "img\\PlayerIMG\\down0.png",
@@ -83,7 +73,7 @@ namespace Idimon
             _player.Inventory.AddItem(_items["Dope"]);
 
             _player.Inventory.AddIdimon(new Student());
-            _player.Inventory.AddIdimon(new tiger());
+            _player.Inventory.AddIdimon(new Beaver());
             _player.Inventory.Idimons[0].LevelUp();
             _player.Inventory.Idimons[0].LevelUp();
 

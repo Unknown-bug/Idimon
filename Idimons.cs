@@ -64,10 +64,6 @@ namespace Idimon
             if (EXP >= ExperienceToNextLevel)
             {
                 LevelUp();
-                // if (CanEvolve)
-                // {
-                //     Evolve();
-                // }
             }
         }
 

@@ -87,7 +87,7 @@ namespace Idimon
         {
             List<Idimons> idimons = new List<Idimons>
             {
-                new VH(),
+                new Beaver(),
                 new tiger(),
                 new Student(),
                 new Idiot(),

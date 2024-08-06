@@ -11,8 +11,6 @@ namespace Idimon
             KeyItems
         }
         // Window _window;
-        private int _width, _length;
-        private Point _point;
         private List<Items> _items;
         private Player _player;
         private int _selectedIndex;
@@ -147,11 +145,6 @@ namespace Idimon
                 Select();
                 _player.Inventory.Toggle();
             }
-        }
-
-        public virtual void Use()
-        {
-
         }
 
         public override void Open()

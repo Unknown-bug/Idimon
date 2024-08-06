@@ -165,8 +165,6 @@ namespace Idimon
                         SplashKit.FillRectangle(Color.RGBAColor(255, 255, 0, 150), x - 5, y - 5, 260, 64);
                     }
 
-                    // idimon.Draw(x, y);
-
                     // Details
                     SplashKit.DrawText(idimon.Name, Color.White, "Arial", 20, x, y);
                     SplashKit.DrawText($"Level: {idimon.Level}", Color.White, "Arial", 20, x + 150, y);
@@ -326,11 +324,6 @@ namespace Idimon
                 // Implement battle logic
                 Select();
                 SplashKit.Delay(100);
-            }
-            
-            else if(SplashKit.KeyTyped(KeyCode.XKey))
-            {
-                ExitBattle();
             }
             else if (SplashKit.KeyTyped(KeyCode.DownKey) || SplashKit.KeyTyped(KeyCode.UpKey))
             {

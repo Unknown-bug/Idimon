@@ -12,7 +12,7 @@ namespace Idimon
         }
         // Window _window;
         private int _width, _length;
-        private Point _point;
+        private Point2D _point;
         private List<Items> _items;
         private Idimons _idimon;
         private int _selectedIndex;
